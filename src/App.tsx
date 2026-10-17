@@ -17,6 +17,7 @@ import { Admissions } from './pages/Admissions';
 import { Gallery } from './pages/Gallery';
 import { Announcements } from './pages/Announcements';
 import { Contact } from './pages/Contact';
+import { Donate } from './pages/Donate';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { WeeklySchedule } from './components/WeeklySchedule';
 import { DailyTimetable } from './components/DailyTimetable';
@@ -46,6 +47,7 @@ export default function App() {
       settings: newData.settings,
       pagesContent: newData.pagesContent,
       programs: newData.programs,
+      donationCategories: newData.donationCategories,
       dailyTimetable: newData.dailyTimetable,
       weeklySchedule: newData.weeklySchedule,
       specialHolidays: newData.specialHolidays,
@@ -151,6 +153,12 @@ export default function App() {
           <Contact
             currentLang={currentLang}
             onAddMessage={handleAddMessage}
+          />
+        )}
+        {activeTab === 'donate' && (
+          <Donate
+            currentLang={currentLang}
+            categories={cmsData.donationCategories}
           />
         )}
         {activeTab === 'admin' && (

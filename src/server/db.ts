@@ -25,6 +25,7 @@ import {
   INITIAL_PAGE_SEO,
   INITIAL_ADMIN_USERS,
   INITIAL_AUDIT_LOGS,
+  INITIAL_DONATION_CATEGORIES,
   SiteSettings,
   PagesContent,
   Student,
@@ -49,7 +50,9 @@ import {
   Announcement,
   GalleryItem,
   AdmissionApplication,
-  ContactMessage
+  ContactMessage,
+  Donation,
+  DonationCategory
 } from '../types';
 
 export interface DatabaseSchema {
@@ -58,6 +61,8 @@ export interface DatabaseSchema {
   students: Student[];
   teachers: Teacher[];
   admissions: AdmissionApplication[];
+  donations: Donation[];
+  donationCategories: DonationCategory[];
   programs: Program[];
   dailyTimetable: DailyPeriod[];
   weeklySchedule: ScheduleDay[];
@@ -97,6 +102,8 @@ function getDefaultData(): DatabaseSchema {
     students: INITIAL_STUDENTS,
     teachers: INITIAL_TEACHERS,
     admissions: INITIAL_APPLICATIONS,
+    donations: [],
+    donationCategories: INITIAL_DONATION_CATEGORIES,
     programs: INITIAL_PROGRAMS,
     dailyTimetable: DAILY_TIMETABLE,
     weeklySchedule: WEEKLY_SCHEDULE,
@@ -181,6 +188,7 @@ export function getPublicData() {
     settings: db.settings,
     pagesContent: db.pagesContent,
     programs: db.programs,
+    donationCategories: db.donationCategories.filter(c => c.enabled),
     dailyTimetable: db.dailyTimetable,
     weeklySchedule: db.weeklySchedule,
     specialHolidays: db.specialHolidays.filter(h => h.isPublished),

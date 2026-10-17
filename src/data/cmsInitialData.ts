@@ -7,6 +7,7 @@ import {
   INITIAL_TEACHERS, 
   INITIAL_APPLICATIONS 
 } from './initialData';
+import { DonationCategory } from '../types';
 
 export interface SiteSettings {
   siteNameUr: string;
@@ -749,4 +750,12 @@ export const INITIAL_AUDIT_LOGS: AuditLog[] = [
     module: 'Institutional Statistics',
     details: '22 اساتذہ کرام اور 400+ طلبہ کرام کے اعداد و شمار تصدیق شدہ کیے گئے۔'
   }
+];
+export const INITIAL_DONATION_CATEGORIES: DonationCategory[] = [
+  { id: 'general', labelUr: 'عمومی عطیہ', labelEn: 'General Donation', isZakatEligible: false, enabled: true },
+  { id: 'quran', labelUr: 'تعلیمِ قرآن', labelEn: 'Quran Education', isZakatEligible: false, enabled: true },
+  { id: 'students', labelUr: 'طلبہ کی تعلیمی ضروریات', labelEn: 'Students Educational Needs', isZakatEligible: true, enabled: true },
+  { id: 'maintenance', labelUr: 'مدرسے کی دیکھ بھال', labelEn: 'Madrasa Maintenance', isZakatEligible: false, enabled: true },
+  { id: 'zakat', labelUr: 'زکوٰۃ', labelEn: 'Zakat', isZakatEligible: true, enabled: true },
+  { id: 'sadaqah', labelUr: 'صدقہ', labelEn: 'Sadaqah', isZakatEligible: false, enabled: true }
 ];

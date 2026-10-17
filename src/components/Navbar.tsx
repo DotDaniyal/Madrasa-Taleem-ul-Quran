@@ -16,7 +16,8 @@ import {
   Lock,
   Clock,
   Sparkles,
-  FileText
+  FileText,
+  Heart
 } from 'lucide-react';
 import { SiteSettings, NavItemConfig } from '../data/cmsInitialData';
 
@@ -85,6 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       gallery: 'شعبہ جات',
       announcements: 'اعلانات',
       contact: 'رابطہ',
+      donate: 'عطیہ',
       admin: 'انتظامیہ',
       applyNow: 'داخلہ فارم',
       menuToggle: 'مینو',
@@ -103,6 +105,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       gallery: 'Departments',
       announcements: 'Announcements',
       contact: 'Contact',
+      donate: 'Donate',
       admin: 'Admin',
       applyNow: 'Apply Now',
       menuToggle: 'Menu',
@@ -119,6 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'gallery', label: t.gallery, icon: Library },
     { id: 'announcements', label: t.announcements, icon: Bell },
     { id: 'contact', label: t.contact, icon: MessageSquare },
+    { id: 'donate', label: t.donate, icon: Heart },
     { id: 'admin', label: t.admin, icon: Lock },
   ];
 

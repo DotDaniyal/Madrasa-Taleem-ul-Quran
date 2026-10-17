@@ -17,7 +17,8 @@ import {
   Phone,
   MessageCircle,
   Clock,
-  GraduationCap
+  GraduationCap,
+  Heart
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { AnimatedCounter } from '../components/AnimatedCounter';
@@ -495,6 +496,30 @@ export const Home: React.FC<HomeProps> = ({
             ))}
           </div>
         </div>
+      </section>
+
+      {/* DONATION CTA SECTION */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="bg-white rounded-3xl p-8 border border-amber-200 shadow-xl flex flex-col items-center text-center gap-6"
+        >
+          <div className="bg-amber-100 text-amber-800 p-4 rounded-full">
+            <Heart className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-slate-900 font-urdu">{isUrdu ? 'مدرسہ کی معاونت کریں' : 'Support the Madrasa'}</h2>
+            <p className="text-slate-600 font-urdu max-w-lg">{isUrdu ? 'آپ کا عطیہ قرآنِ کریم کی تعلیم میں ہمارے اساتذہ اور طلبہ کی معاونت کا ذریعہ بن سکتا ہے۔' : 'Your contribution helps support our teachers and students in their noble pursuit of Quranic education.'}</p>
+          </div>
+          <button
+            onClick={() => setActiveTab('donate')}
+            className="bg-emerald-800 hover:bg-emerald-900 text-white px-8 py-4 rounded-2xl font-bold transition-all"
+          >
+            {isUrdu ? 'عطیہ دیں' : 'Donate Now'}
+          </button>
+        </motion.div>
       </section>
 
       {/* FINAL CALL TO ACTION BANNER */}

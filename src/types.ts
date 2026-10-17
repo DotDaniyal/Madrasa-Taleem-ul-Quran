@@ -107,3 +107,24 @@ export interface Teacher {
   status?: 'active' | 'archived';
   imageUrl?: string;
 }
+
+export interface DonationCategory {
+  id: string;
+  labelUr: string;
+  labelEn: string;
+  isZakatEligible: boolean;
+  enabled: boolean;
+}
+
+export interface Donation {
+  id: string;
+  amount: number;
+  categoryId: string;
+  donorName: string;
+  donorContact: string;
+  paymentMethod: 'bank_transfer' | 'easypaisa' | 'jazzcash' | 'online_gateway';
+  status: 'pending' | 'successful' | 'failed' | 'refunded';
+  referenceNumber?: string;
+  createdAt: string;
+  verifiedAt?: string;
+}

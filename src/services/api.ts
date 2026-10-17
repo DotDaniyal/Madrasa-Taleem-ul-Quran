@@ -23,7 +23,9 @@ import {
   Announcement,
   GalleryItem,
   AdmissionApplication,
-  ContactMessage
+  ContactMessage,
+  Donation,
+  DonationCategory
 } from '../types';
 import {
   INITIAL_SETTINGS,
@@ -40,7 +42,8 @@ import {
   INITIAL_FOOTER_CONFIG,
   INITIAL_PAGE_SEO,
   INITIAL_ADMIN_USERS,
-  INITIAL_AUDIT_LOGS
+  INITIAL_AUDIT_LOGS,
+  INITIAL_DONATION_CATEGORIES
 } from '../data/cmsInitialData';
 import {
   DAILY_TIMETABLE,
@@ -58,6 +61,8 @@ export interface FullAdminData {
   students: Student[];
   teachers: Teacher[];
   admissions: AdmissionApplication[];
+  donations: Donation[];
+  donationCategories: DonationCategory[];
   programs: Program[];
   dailyTimetable: DailyPeriod[];
   weeklySchedule: ScheduleDay[];
@@ -82,6 +87,7 @@ export interface PublicWebsiteData {
   settings: SiteSettings;
   pagesContent: PagesContent;
   programs: Program[];
+  donationCategories: DonationCategory[];
   dailyTimetable: DailyPeriod[];
   weeklySchedule: ScheduleDay[];
   specialHolidays: SpecialHoliday[];
@@ -154,6 +160,8 @@ export function getDefaultAdminData(): FullAdminData {
     students: INITIAL_STUDENTS,
     teachers: INITIAL_TEACHERS,
     admissions: INITIAL_APPLICATIONS,
+    donations: [],
+    donationCategories: INITIAL_DONATION_CATEGORIES,
     programs: INITIAL_PROGRAMS,
     dailyTimetable: DAILY_TIMETABLE,
     weeklySchedule: WEEKLY_SCHEDULE,
