@@ -104,4 +104,6 @@ export interface Teacher {
   experienceUr: string;
   experienceEn: string;
   monogramUr: string;
+  status?: 'active' | 'archived';
+  imageUrl?: string;
 }

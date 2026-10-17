@@ -15,21 +15,25 @@ import {
   ArrowUp
 } from 'lucide-react';
 
+import { SiteSettings, FooterConfig } from '../data/cmsInitialData';
+
 interface FooterProps {
   currentLang: Language;
   setActiveTab: (tab: string) => void;
+  settings?: SiteSettings;
+  footerConfig?: FooterConfig;
 }
 
-export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab }) => {
+export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, settings, footerConfig }) => {
   const isUrdu = currentLang === 'ur';
   const currentYear = new Date().getFullYear();
 
   const t = {
     ur: {
-      urduTitle: 'مدرسہ تعلیم القرآن فریال مسجد',
-      englishTitle: 'Madrasa Taleem-ul-Quran Faryal Masjid',
-      desc: 'حفظِ قرآن کریم، ناظرہ مع تجوید اور اخلاقی و دینی تربیت کا مستند اور باوقار ادارہ۔ تقریباً 400 طلبہ زیرِ تعلیم اور 22 اساتذہ کرام کی زیرِ نگرانی معیاری تدریس۔',
-      quickLinks: 'فوری روابط',
+      urduTitle: settings?.siteNameUr || 'مدرسہ تعلیم القرآن فریال مسجد',
+      englishTitle: settings?.siteNameEn || 'Madrasa Taleem-ul-Quran Faryal Masjid',
+      desc: footerConfig?.aboutTextUr || 'حفظِ قرآن کریم، ناظرہ مع تجوید اور اخلاقی و دینی تربیت کا مستند اور باوقار ادارہ۔ تقریباً 400 طلبہ زیرِ تعلیم اور 22 اساتذہ کرام کی زیرِ نگرانی معیاری تدریس۔',
+      quickLinks: footerConfig?.quickLinksTitleUr || 'فوری روابط',
       home: 'ہوم پیج',
       about: 'تعارفِ مدرسہ',
       programs: 'تعلیمی پروگرامز',
@@ -39,48 +43,48 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab }) => 
       admissions: 'آن لائن داخلہ',
       gallery: 'شعبہ جات و سہولیات',
       announcements: 'اعلانات و نوٹس',
-      contact: 'رابطہ کی تفصیلات',
+      contact: footerConfig?.contactTitleUr || 'رابطہ کی تفصیلات',
       contactInfo: 'رابطہ و معلومات',
-      phone: '+92 300 1234567',
-      email: 'info@faryalmadrasa.edu.pk',
-      address: 'فریال مسجد، کراچی، پاکستان',
+      phone: settings?.phone || '+92 300 1234567',
+      email: settings?.email || 'contact@madrasataleemulquran.edu.pk',
+      address: settings?.addressUr || 'فریال مسجد، کراچی، پاکستان',
       scheduleTitle: 'تعلیمی اوقات و تعطیل',
       teachingDays: 'ہفتہ تا جمعرات: باقاعدہ تدریسی نشستیں',
       morningSession: 'صبح کی نشست: 7:30 بجے تا 12:00 بجے دوپہر',
       afternoonSession: 'بعد دوپہر: 2:30 بجے تا نمازِ عصر',
       holiday: 'جمعہ: ہفتہ وار تعطیل (نمازِ جمعہ)',
       prayerDiscipline: 'پنج وقتہ نماز باجماعت تکبیرِ اولیٰ کا اہتمام',
-      rights: `جملہ حقوق محفوظ ہیں۔ مدرسہ تعلیم القرآن فریال مسجد © ${currentYear}`,
+      rights: footerConfig?.copyrightUr || `جملہ حقوق محفوظ ہیں۔ مدرسہ تعلیم القرآن فریال مسجد © ${currentYear}`,
       motto: 'خلوصِ نیت اور خدمتِ قرآن',
       backToTop: 'اوپر جائیں'
     },
     en: {
-      urduTitle: 'مدرسہ تعلیم القرآن فریال مسجد',
-      englishTitle: 'Madrasa Taleem-ul-Quran Faryal Masjid',
-      desc: 'An authentic Islamic institution dedicated to Quran memorization (Hifz), recitation with Tajweed, and character building. Approximately 400 students guided by 22 qualified teachers.',
-      quickLinks: 'Quick Links',
+      urduTitle: settings?.siteNameUr || 'مدرسہ تعلیم القرآن فریال مسجد',
+      englishTitle: settings?.siteNameEn || 'Madrasa Taleem-ul-Quran Faryal Masjid',
+      desc: footerConfig?.aboutTextEn || 'An authentic Islamic institution dedicated to Quran memorization (Hifz), recitation with Tajweed, and character building. Approximately 400 students guided by 22 qualified teachers.',
+      quickLinks: footerConfig?.quickLinksTitleEn || 'Quick Links',
       home: 'Home',
       about: 'About Madrasa',
-      programs: 'Educational Programs',
-      hifz: "Sho'ba-e-Hifz-ul-Quran",
+      programs: 'Academic Programs',
+      hifz: 'Hifz Department',
       nazra: 'Nazra with Tajweed',
-      schedule: 'Weekly Schedule',
+      schedule: 'Schedule & Timetable',
       admissions: 'Online Admissions',
       gallery: 'Departments & Facilities',
-      announcements: 'Announcements',
-      contact: 'Contact Us',
-      contactInfo: 'Contact Information',
-      phone: '+92 300 1234567',
-      email: 'info@faryalmadrasa.edu.pk',
-      address: 'Faryal Masjid, Karachi, Pakistan',
-      scheduleTitle: 'Academic Timetable',
-      teachingDays: 'Saturday to Thursday: Regular Classes',
+      announcements: 'Notices & Board',
+      contact: footerConfig?.contactTitleEn || 'Contact Details',
+      contactInfo: 'Get in Touch',
+      phone: settings?.phone || '+92 300 1234567',
+      email: settings?.email || 'contact@madrasataleemulquran.edu.pk',
+      address: settings?.addressEn || 'Faryal Masjid, Karachi, Pakistan',
+      scheduleTitle: 'Academic Timetable & Recess',
+      teachingDays: 'Saturday to Thursday: Classes in Session',
       morningSession: 'Morning Session: 7:30 AM – 12:00 PM',
-      afternoonSession: 'Afternoon Session: 2:30 PM until Asr Prayer',
-      holiday: 'Friday: Weekly Holiday (Jummah Prayer)',
-      prayerDiscipline: 'Five daily prayers with Takbeer-e-Ula',
-      rights: `All rights reserved. Madrasa Taleem-ul-Quran Faryal Masjid © ${currentYear}`,
-      motto: 'Dedicated to Quranic Education',
+      afternoonSession: 'Afternoon Session: 2:30 PM – Asr Prayer',
+      holiday: 'Friday: Weekly Holiday (Jummah)',
+      prayerDiscipline: 'Congregational Prayer with Takbeer-e-Ula',
+      rights: footerConfig?.copyrightEn || `All Rights Reserved. Madrasa Taleem-ul-Quran Faryal Masjid © ${currentYear}`,
+      motto: 'Devotion & Service to the Holy Quran',
       backToTop: 'Back to Top'
     }
   }[currentLang];
@@ -110,8 +114,12 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab }) => 
             
             {/* Centered / Aligned Logo Crest & Title */}
             <div className="flex items-start gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 border border-amber-400/60 flex items-center justify-center text-white shadow-md shadow-emerald-950 shrink-0 mt-1">
-                <BookOpen className="w-6 h-6 text-amber-300" strokeWidth={1.8} />
+              <div className="w-12 h-12 rounded-2xl bg-white border border-amber-400/60 flex items-center justify-center shadow-md shadow-emerald-950 shrink-0 mt-1 overflow-hidden p-0.5">
+                <img 
+                  src={settings?.logoUrl || '/images/madrasa-logo.jpeg'} 
+                  alt="Madrasa Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl font-bold text-white font-urdu leading-snug">

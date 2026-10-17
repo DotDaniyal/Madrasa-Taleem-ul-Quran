@@ -4,12 +4,17 @@ import { WEEKLY_SCHEDULE } from '../data/initialData';
 import { Calendar, Clock, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 
+import { SpecialHoliday } from '../data/cmsInitialData';
+
 interface WeeklyScheduleProps {
   currentLang: Language;
+  schedule?: ScheduleDay[];
+  specialHolidays?: SpecialHoliday[];
 }
 
-export const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({ currentLang }) => {
+export const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({ currentLang, schedule, specialHolidays }) => {
   const isUrdu = currentLang === 'ur';
+  const days = schedule && schedule.length > 0 ? schedule : WEEKLY_SCHEDULE;
 
   const t = {
     ur: {
@@ -90,7 +95,7 @@ export const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({ currentLang }) =
 
         {/* 7-Day Schedule Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3.5">
-          {WEEKLY_SCHEDULE.map((item) => (
+          {days.map((item) => (
             <div
               key={item.id}
               className={`rounded-2xl p-4 flex flex-col justify-between transition-all border ${
@@ -130,6 +135,28 @@ export const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({ currentLang }) =
             </div>
           ))}
         </div>
+
+        {/* Special Holiday Notices */}
+        {specialHolidays && specialHolidays.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-base font-bold text-slate-800 font-urdu flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-amber-600" />
+              <span>{isUrdu ? 'خصوصی تعطیلات و اعلانات' : 'Special Closures & Holiday Dates'}</span>
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {specialHolidays.map(hol => (
+                <div key={hol.id} className="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+                  <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1 text-xs font-urdu">
+                    <div className="font-bold text-amber-950 text-sm">{isUrdu ? hol.titleUr : hol.titleEn}</div>
+                    <div className="text-amber-800 font-semibold">{hol.date} {hol.endDate ? `تا ${hol.endDate}` : ''}</div>
+                    <p className="text-slate-600">{isUrdu ? hol.descUr : hol.descEn}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Operational Note for Guardians */}
         <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 sm:p-5 flex items-start gap-3 text-xs sm:text-sm text-slate-700 font-urdu">

@@ -21,12 +21,22 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
+import { SiteSettings, PagesContent, Competition, AnnualAward, SpecialHoliday } from '../data/cmsInitialData';
+import { DailyPeriod, ScheduleDay } from '../types';
+
 interface HomeProps {
   currentLang: Language;
   setActiveTab: (tab: string) => void;
   programs: Program[];
   announcements: Announcement[];
   gallery: GalleryItem[];
+  settings?: SiteSettings;
+  pagesContent?: PagesContent;
+  timetable?: DailyPeriod[];
+  schedule?: ScheduleDay[];
+  specialHolidays?: SpecialHoliday[];
+  competitions?: Competition[];
+  annualAwards?: AnnualAward[];
 }
 
 export const Home: React.FC<HomeProps> = ({ 
@@ -34,18 +44,26 @@ export const Home: React.FC<HomeProps> = ({
   setActiveTab, 
   programs, 
   announcements, 
-  gallery
+  gallery,
+  settings,
+  pagesContent,
+  timetable,
+  schedule,
+  specialHolidays,
+  competitions,
+  annualAwards
 }) => {
   const isUrdu = currentLang === 'ur';
 
+  const homeContent = pagesContent?.home;
   const t = {
     ur: {
       bismillah: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
       welcome: 'مدرسہ تعلیم القرآن فریال مسجد میں خوش آمدید',
-      title: 'مدرسہ تعلیم القرآن فریال مسجد',
-      subtitle: 'قرآنِ کریم کی حفظ، ناظرہ، تجوید اور بنیادی اسلامی تعلیمات کا ایک مستند، باوقار اور پرامن روحانی مرکز۔',
-      hadithTitle: 'خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ',
-      hadithTranslation: '”تم میں سے بہترین شخص وہ ہے جو قرآن سیکھے اور سکھائے۔“ (صحیح بخاری)',
+      title: homeContent?.heroTitleUr || settings?.siteNameUr || 'مدرسہ تعلیم القرآن فریال مسجد',
+      subtitle: homeContent?.heroDescUr || 'قرآنِ کریم کی حفظ، ناظرہ، تجوید اور بنیادی اسلامی تعلیمات کا ایک مستند، باوقار اور پرامن روحانی مرکز۔',
+      hadithTitle: homeContent?.hadithArabic || 'خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ',
+      hadithTranslation: homeContent?.hadithUr || '”تم میں سے بہترین شخص وہ ہے جو قرآن سیکھے اور سکھائے۔“ (صحیح بخاری)',
       applyBtn: 'آن لائن داخلہ فارم',
       programsBtn: 'تمام تعلیمی پروگرامز',
       scheduleBtn: 'روزانہ کا نظام الاوقات',
@@ -59,17 +77,17 @@ export const Home: React.FC<HomeProps> = ({
       // Announcements & CTA
       announcementsTitle: 'اہم اعلانات و نوٹس بورڈ',
       viewAll: 'تمام دیکھیں',
-      ctaTitle: 'اپنے بچے کا مستقبل قرآنِ پاک کی روشنی سے روشن کریں',
-      ctaDesc: 'سال 2026ء کے داخلے جاری ہیں۔ محدود نشستوں کے باعث آج ہی اپنی درخواست آن لائن جمع کروائیں۔',
+      ctaTitle: homeContent?.ctaTitleUr || 'اپنے بچے کا مستقبل قرآنِ پاک کی روشنی سے روشن کریں',
+      ctaDesc: homeContent?.ctaDescUr || 'سال 2026ء کے داخلے جاری ہیں۔ محدود نشستوں کے باعث آج ہی اپنی درخواست آن لائن جمع کروائیں۔',
       whatsappContact: 'واٹس ایپ رابطہ',
     },
     en: {
       bismillah: 'In the name of Allah, the Most Gracious, the Most Merciful',
       welcome: 'Welcome to Madrasa Taleem-ul-Quran Faryal Masjid',
-      title: 'Madrasa Taleem-ul-Quran Faryal Masjid',
-      subtitle: 'A prestigious, authentic, and serene spiritual sanctuary dedicated to Quran memorization, recitation, and Islamic character building.',
-      hadithTitle: 'خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ',
-      hadithTranslation: '"The best among you are those who learn the Quran and teach it." (Sahih al-Bukhari)',
+      title: homeContent?.heroTitleEn || settings?.siteNameEn || 'Madrasa Taleem-ul-Quran Faryal Masjid',
+      subtitle: homeContent?.heroDescEn || 'A prestigious, authentic, and serene spiritual sanctuary dedicated to Quran memorization, recitation, and Islamic character building.',
+      hadithTitle: homeContent?.hadithArabic || 'خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ',
+      hadithTranslation: homeContent?.hadithEn || '"The best among you are those who learn the Quran and teach it." (Sahih al-Bukhari)',
       applyBtn: 'Online Admission Form',
       programsBtn: 'Educational Programs',
       scheduleBtn: 'Daily Timetable',
@@ -83,8 +101,8 @@ export const Home: React.FC<HomeProps> = ({
       // Announcements & CTA
       announcementsTitle: 'Important Notices & Announcements',
       viewAll: 'View All',
-      ctaTitle: 'Illuminate Your Child’s Future with the Light of the Quran',
-      ctaDesc: 'Admissions open for 2026. Limited seats available; apply online today.',
+      ctaTitle: homeContent?.ctaTitleEn || 'Illuminate Your Child’s Future with the Light of the Quran',
+      ctaDesc: homeContent?.ctaDescEn || 'Admissions open for 2026. Limited seats available; apply online today.',
       whatsappContact: 'WhatsApp Chat',
     }
   }[currentLang];
@@ -259,19 +277,19 @@ export const Home: React.FC<HomeProps> = ({
             <div className="space-y-2">
               <div className="flex items-baseline justify-center sm:justify-start gap-2.5">
                 <span className="text-5xl sm:text-6xl font-extrabold text-emerald-950 font-mono tracking-tight" dir="ltr">
-                  22
+                  {settings?.statsTeachers || '22'}
                 </span>
                 <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 font-urdu">
                   {isUrdu ? 'اساتذہ' : 'Teachers'}
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-slate-900 font-urdu">
-                {isUrdu ? 'اساتذہ کرام' : 'Teachers'}
+                {isUrdu ? (settings?.statsTeachersLabelUr || 'اساتذہ کرام') : (settings?.statsTeachersLabelEn || 'Teachers')}
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed font-urdu">
                 {isUrdu 
-                  ? 'قرآنِ کریم کی تعلیم کے لیے 22 اساتذہ کرام خدمات انجام دے رہے ہیں۔' 
-                  : 'A dedicated team of 22 teachers serving Quranic education.'}
+                  ? (settings?.statsTeachersDescUr || 'قرآنِ کریم کی تعلیم کے لیے 22 اساتذہ کرام خدمات انجام دے رہے ہیں۔') 
+                  : (settings?.statsTeachersDescEn || 'A dedicated team of 22 teachers serving Quranic education.')}
               </p>
             </div>
           </div>
@@ -284,19 +302,19 @@ export const Home: React.FC<HomeProps> = ({
             <div className="space-y-2">
               <div className="flex items-baseline justify-center sm:justify-start gap-2.5">
                 <span className="text-5xl sm:text-6xl font-extrabold text-amber-700 font-mono tracking-tight" dir="ltr">
-                  400+
+                  {settings?.statsStudents || '400+'}
                 </span>
                 <span className="text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 font-urdu">
                   {isUrdu ? 'طلبہ' : 'Students'}
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-slate-900 font-urdu">
-                {isUrdu ? 'طلبہ کرام' : 'Students'}
+                {isUrdu ? (settings?.statsStudentsLabelUr || 'طلبہ کرام') : (settings?.statsStudentsLabelEn || 'Students')}
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed font-urdu">
                 {isUrdu 
-                  ? 'تقریباً 400 طلبہ مدرسے کے تعلیمی ماحول سے مستفید ہو رہے ہیں۔' 
-                  : 'Approximately 400 students benefit from the madrasa\'s educational environment.'}
+                  ? (settings?.statsStudentsDescUr || 'تقریباً 400 طلبہ مدرسے کے تعلیمی ماحول سے مستفید ہو رہے ہیں۔') 
+                  : (settings?.statsStudentsDescEn || 'Approximately 400 students benefit from the madrasa\'s educational environment.')}
               </p>
             </div>
           </div>
@@ -304,7 +322,7 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* 4. DAILY MADRASA TIMETABLE (4 Periods) */}
-      <DailyTimetable currentLang={currentLang} />
+      <DailyTimetable currentLang={currentLang} timetable={timetable} />
 
       {/* 5. CORE QURANIC EDUCATION PROGRAMS: NAZRA-UL-QURAN & SHO'BA-E-HIFZ-UL-QURAN */}
       <section className="bg-slate-100/70 py-16 border-y border-slate-200">
@@ -413,7 +431,7 @@ export const Home: React.FC<HomeProps> = ({
       <AcademicAssessments currentLang={currentLang} />
 
       {/* 10. FRIDAY WEEKLY HOLIDAY INFORMATION & ACADEMIC DAYS */}
-      <WeeklySchedule currentLang={currentLang} />
+      <WeeklySchedule currentLang={currentLang} schedule={schedule} specialHolidays={specialHolidays} />
 
       {/* 11. ANNOUNCEMENTS PREVIEW & CTA BANNER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

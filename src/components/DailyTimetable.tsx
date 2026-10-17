@@ -4,12 +4,16 @@ import { DAILY_TIMETABLE } from '../data/initialData';
 import { Clock, Sun, Moon, BookOpen, Sparkles, CheckCircle2, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
+import { DailyPeriod } from '../types';
+
 interface DailyTimetableProps {
   currentLang: Language;
+  timetable?: DailyPeriod[];
 }
 
-export const DailyTimetable: React.FC<DailyTimetableProps> = ({ currentLang }) => {
+export const DailyTimetable: React.FC<DailyTimetableProps> = ({ currentLang, timetable }) => {
   const isUrdu = currentLang === 'ur';
+  const periods = timetable && timetable.length > 0 ? timetable : DAILY_TIMETABLE;
 
   const t = {
     ur: {
@@ -70,7 +74,7 @@ export const DailyTimetable: React.FC<DailyTimetableProps> = ({ currentLang }) =
 
         {/* 4 Periods Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {DAILY_TIMETABLE.map((period, idx) => {
+          {periods.map((period, idx) => {
             const Icon = getIcon(period.iconName);
             return (
               <motion.div

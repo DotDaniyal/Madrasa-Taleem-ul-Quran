@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Language, AdmissionApplication, Announcement, ContactMessage } from './types';
-import { INITIAL_PROGRAMS, INITIAL_ANNOUNCEMENTS, INITIAL_GALLERY, INITIAL_TEACHERS, INITIAL_APPLICATIONS } from './data/initialData';
+import { 
+  PublicWebsiteData, 
+  FullAdminData,
+  fetchPublicData, 
+  getDefaultPublicData, 
+  submitOnlineAdmission, 
+  submitContactMessage 
+} from './services/api';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
@@ -18,67 +25,70 @@ export default function App() {
   const [currentLang, setLang] = useState<Language>('ur');
   const [activeTab, setActiveTab] = useState<string>('home');
 
-  // State with localStorage persistence
-  const [programs] = useState(INITIAL_PROGRAMS);
-  const [teachers] = useState(INITIAL_TEACHERS);
-  const [gallery] = useState(INITIAL_GALLERY);
+  // Unified dynamic CMS data from database
+  const [cmsData, setCmsData] = useState<PublicWebsiteData>(getDefaultPublicData());
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const [announcements, setAnnouncements] = useState<Announcement[]>(() => {
-    try {
-      const saved = localStorage.getItem('tmq_announcements');
-      return saved ? JSON.parse(saved) : INITIAL_ANNOUNCEMENTS;
-    } catch {
-      return INITIAL_ANNOUNCEMENTS;
-    }
-  });
-
-  const [applications, setApplications] = useState<AdmissionApplication[]>(() => {
-    try {
-      const saved = localStorage.getItem('tmq_applications');
-      return saved ? JSON.parse(saved) : INITIAL_APPLICATIONS;
-    } catch {
-      return INITIAL_APPLICATIONS;
-    }
-  });
-
-  const [messages, setMessages] = useState<ContactMessage[]>(() => {
-    try {
-      const saved = localStorage.getItem('tmq_messages');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
+  // Sync with backend API on mount
   useEffect(() => {
-    localStorage.setItem('tmq_announcements', JSON.stringify(announcements));
-  }, [announcements]);
+    fetchPublicData().then(data => {
+      setCmsData(data);
+      setIsDataLoaded(true);
+      if (data.settings?.defaultLang) {
+        setLang(data.settings.defaultLang);
+      }
+    });
+  }, []);
 
-  useEffect(() => {
-    localStorage.setItem('tmq_applications', JSON.stringify(applications));
-  }, [applications]);
-
-  useEffect(() => {
-    localStorage.setItem('tmq_messages', JSON.stringify(messages));
-  }, [messages]);
-
-  const handleAddApplication = (newApp: AdmissionApplication) => {
-    setApplications(prev => [newApp, ...prev]);
+  // When admin panel saves changes, update public website state immediately
+  const handleDataUpdatedFromAdmin = (newData: FullAdminData) => {
+    setCmsData({
+      settings: newData.settings,
+      pagesContent: newData.pagesContent,
+      programs: newData.programs,
+      dailyTimetable: newData.dailyTimetable,
+      weeklySchedule: newData.weeklySchedule,
+      specialHolidays: newData.specialHolidays,
+      teachers: newData.teachers,
+      announcements: newData.announcements,
+      gallery: newData.gallery,
+      competitions: newData.competitions,
+      competitionResults: newData.competitionResults,
+      assessments: newData.assessments,
+      examinations: newData.examinations,
+      annualAwards: newData.annualAwards,
+      navItems: newData.navItems,
+      footerConfig: newData.footerConfig,
+      seoSettings: newData.seoSettings
+    });
   };
 
-  const handleAddMessage = (newMsg: ContactMessage) => {
-    setMessages(prev => [newMsg, ...prev]);
+  const handleAddApplication = async (newApp: AdmissionApplication) => {
+    await submitOnlineAdmission(newApp);
+  };
+
+  const handleAddMessage = async (newMsg: ContactMessage) => {
+    await submitContactMessage(newMsg);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans relative selection:bg-emerald-600 selection:text-white">
       
-      {/* Navigation Header */}
+      {/* Maintenance Mode Notice Banner if enabled by admin */}
+      {cmsData.settings.maintenanceMode && (
+        <div className="bg-amber-500 text-emerald-950 px-4 py-2 text-center text-xs font-bold font-urdu">
+          ⚠️ اطلاعیہ: ویب سائٹ پر اس وقت انتظامی اپ گریڈ کا کام جاری ہے۔
+        </div>
+      )}
+
+      {/* Navigation Header with dynamic branding and logo */}
       <Navbar
         currentLang={currentLang}
         setLang={setLang}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        settings={cmsData.settings}
+        navItemsConfig={cmsData.navItems}
       />
 
       {/* Main Content Router */}
@@ -87,47 +97,54 @@ export default function App() {
           <Home
             currentLang={currentLang}
             setActiveTab={setActiveTab}
-            programs={programs}
-            announcements={announcements}
-            gallery={gallery}
+            programs={cmsData.programs}
+            announcements={cmsData.announcements}
+            gallery={cmsData.gallery}
+            settings={cmsData.settings}
+            pagesContent={cmsData.pagesContent}
+            timetable={cmsData.dailyTimetable}
+            schedule={cmsData.weeklySchedule}
+            specialHolidays={cmsData.specialHolidays}
+            competitions={cmsData.competitions}
+            annualAwards={cmsData.annualAwards}
           />
         )}
         {activeTab === 'about' && (
           <About
             currentLang={currentLang}
-            teachers={teachers}
+            teachers={cmsData.teachers}
           />
         )}
         {activeTab === 'programs' && (
           <Programs
             currentLang={currentLang}
-            programs={programs}
+            programs={cmsData.programs}
             setActiveTab={setActiveTab}
           />
         )}
         {activeTab === 'schedule' && (
           <div className="py-8 space-y-12">
-            <DailyTimetable currentLang={currentLang} />
-            <WeeklySchedule currentLang={currentLang} />
+            <DailyTimetable currentLang={currentLang} timetable={cmsData.dailyTimetable} />
+            <WeeklySchedule currentLang={currentLang} schedule={cmsData.weeklySchedule} specialHolidays={cmsData.specialHolidays} />
           </div>
         )}
         {activeTab === 'admissions' && (
           <Admissions
             currentLang={currentLang}
-            programs={programs}
+            programs={cmsData.programs}
             onAddApplication={handleAddApplication}
           />
         )}
         {activeTab === 'gallery' && (
           <Gallery
             currentLang={currentLang}
-            gallery={gallery}
+            gallery={cmsData.gallery}
           />
         )}
         {activeTab === 'announcements' && (
           <Announcements
             currentLang={currentLang}
-            announcements={announcements}
+            announcements={cmsData.announcements}
           />
         )}
         {activeTab === 'contact' && (
@@ -139,20 +156,17 @@ export default function App() {
         {activeTab === 'admin' && (
           <AdminDashboard
             currentLang={currentLang}
-            applications={applications}
-            setApplications={setApplications}
-            announcements={announcements}
-            setAnnouncements={setAnnouncements}
-            messages={messages}
-            setMessages={setMessages}
+            onDataUpdated={handleDataUpdatedFromAdmin}
           />
         )}
       </main>
 
-      {/* Footer */}
+      {/* Footer with dynamic settings and copyright */}
       <Footer
         currentLang={currentLang}
         setActiveTab={setActiveTab}
+        settings={cmsData.settings}
+        footerConfig={cmsData.footerConfig}
       />
 
     </div>

@@ -18,29 +18,34 @@ import {
   Sparkles,
   FileText
 } from 'lucide-react';
+import { SiteSettings, NavItemConfig } from '../data/cmsInitialData';
 
 interface NavbarProps {
   currentLang: Language;
   setLang: (lang: Language) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  settings?: SiteSettings;
+  navItemsConfig?: NavItemConfig[];
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   currentLang, 
   setLang, 
   activeTab, 
-  setActiveTab
+  setActiveTab,
+  settings,
+  navItemsConfig
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isUrdu = currentLang === 'ur';
 
   const t = {
     ur: {
-      urduTitle: 'مدرسہ تعلیم القرآن فریال مسجد',
-      englishTitle: 'Madrasa Taleem-ul-Quran Faryal Masjid',
-      motto: 'حفظ و ناظرہ مع تجوید • اخلاقی و دینی تربیت کا مستند ادارہ',
-      scheduleNotice: 'تعلیمی شیڈول: ہفتہ تا جمعرات تدریسی نشستیں | جمعہ: ہفتہ وار تعطیل (جمعہ مبارک)',
+      urduTitle: settings?.siteNameUr || 'مدرسہ تعلیم القرآن فریال مسجد',
+      englishTitle: settings?.siteNameEn || 'Madrasa Taleem-ul-Quran Faryal Masjid',
+      motto: settings?.mottoUr || 'حفظ و ناظرہ مع تجوید • اخلاقی و دینی تربیت کا مستند ادارہ',
+      scheduleNotice: settings?.scheduleNoticeUr || 'تعلیمی شیڈول: ہفتہ تا جمعرات تدریسی نشستیں | جمعہ: ہفتہ وار تعطیل (جمعہ مبارک)',
       home: 'ہوم',
       about: 'تعارف',
       programs: 'پروگرامز',
@@ -52,13 +57,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       admin: 'انتظامیہ',
       applyNow: 'داخلہ فارم',
       menuToggle: 'مینو',
-      phone: '+92 300 1234567'
+      phone: settings?.phone || '+92 300 1234567'
     },
     en: {
-      urduTitle: 'مدرسہ تعلیم القرآن فریال مسجد',
-      englishTitle: 'Madrasa Taleem-ul-Quran Faryal Masjid',
-      motto: 'Quran Memorization, Recitation & Tajweed • Certified Islamic Institution',
-      scheduleNotice: 'Academic Timetable: Saturday - Thursday Classes | Friday: Weekly Holiday (Jummah)',
+      urduTitle: settings?.siteNameUr || 'مدرسہ تعلیم القرآن فریال مسجد',
+      englishTitle: settings?.siteNameEn || 'Madrasa Taleem-ul-Quran Faryal Masjid',
+      motto: settings?.mottoEn || 'Quran Memorization, Recitation & Tajweed • Certified Islamic Institution',
+      scheduleNotice: settings?.scheduleNoticeEn || 'Academic Timetable: Saturday - Thursday Classes | Friday: Weekly Holiday (Jummah)',
       home: 'Home',
       about: 'About',
       programs: 'Programs',
@@ -70,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       admin: 'Admin',
       applyNow: 'Apply Now',
       menuToggle: 'Menu',
-      phone: '+92 300 1234567'
+      phone: settings?.phone || '+92 300 1234567'
     }
   }[currentLang];
 
@@ -163,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Official Madrasa Logo Image */}
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border-2 border-emerald-700/40 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 relative overflow-hidden p-1">
               <img 
-                src="/images/madrasa-logo.jpeg" 
+                src={settings?.logoUrl || '/images/madrasa-logo.jpeg'} 
                 alt="مدرسہ تعلیم القرآن فریال مسجد لوگو" 
                 className="w-full h-full object-contain"
               />
