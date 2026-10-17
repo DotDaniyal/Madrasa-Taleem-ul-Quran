@@ -191,9 +191,13 @@ export const Home: React.FC<HomeProps> = ({
             >
               <div className="bg-gradient-to-br from-emerald-900/90 via-teal-950 to-slate-950 rounded-3xl p-8 border-2 border-amber-400/40 shadow-2xl space-y-6 relative overflow-hidden text-center">
                 
-                {/* Official Logo / Crest Motif */}
-                <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg text-emerald-950 font-bold">
-                  <BookOpen className="w-10 h-10" />
+                {/* Official Logo Image */}
+                <div className="w-24 h-24 mx-auto rounded-2xl bg-white flex items-center justify-center shadow-xl p-1.5 border-2 border-amber-400">
+                  <img 
+                    src="/images/madrasa-logo.jpeg" 
+                    alt="مدرسہ تعلیم القرآن فریال مسجد لوگو" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
 
                 <div className="space-y-2">

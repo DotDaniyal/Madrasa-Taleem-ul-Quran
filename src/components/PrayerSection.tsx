@@ -181,7 +181,7 @@ export const PrayerSection: React.FC<PrayerSectionProps> = ({ currentLang }) => 
       </section>
 
       {/* 2. PRAYER COMPETITIONS & STUDENT MOTIVATION SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-950 text-white rounded-3xl p-8 sm:p-12 border-2 border-amber-400/40 shadow-2xl max-w-7xl mx-auto my-8">
+      <section id="prayer-competitions" className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-950 text-white rounded-3xl p-8 sm:p-12 border-2 border-amber-400/40 shadow-2xl max-w-7xl mx-auto my-8 scroll-mt-24">
         <div className="absolute inset-0 opacity-10 bg-islamic-pattern pointer-events-none"></div>
 
         <motion.div 

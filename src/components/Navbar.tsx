@@ -160,10 +160,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="group flex flex-col items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-700 rounded-2xl p-1 transition-transform active:scale-95"
             aria-label="Go to Homepage"
           >
-            {/* Official Madrasa Quran Crest Emblem */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-900 border-2 border-amber-400/70 flex items-center justify-center text-white shadow-lg shadow-emerald-900/20 group-hover:shadow-emerald-900/30 group-hover:scale-105 transition-all duration-300 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-tr from-amber-400/10 to-transparent pointer-events-none"></div>
-              <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-amber-300 drop-shadow-sm" strokeWidth={1.8} />
+            {/* Official Madrasa Logo Image */}
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border-2 border-emerald-700/40 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 relative overflow-hidden p-1">
+              <img 
+                src="/images/madrasa-logo.jpeg" 
+                alt="مدرسہ تعلیم القرآن فریال مسجد لوگو" 
+                className="w-full h-full object-contain"
+              />
             </div>
 
             {/* Urdu Institution Name Directly Below Logo */}
