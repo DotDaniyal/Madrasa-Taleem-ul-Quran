@@ -1,4 +1,71 @@
-import { Program, Announcement, GalleryItem, Teacher, AdmissionApplication, ScheduleDay } from '../types';
+import { Program, Announcement, GalleryItem, Teacher, AdmissionApplication, ScheduleDay, DailyPeriod } from '../types';
+
+export const DAILY_TIMETABLE: DailyPeriod[] = [
+  {
+    id: 'period-1',
+    periodNum: 1,
+    titleUr: 'پہلا دورانیہ — صبح کی تعلیمی نشست',
+    titleEn: 'Period 1 — Morning Academic Session',
+    timeRangeUr: 'صبح 7:30 تا دوپہر 12:00',
+    timeRangeEn: '7:30 AM – 12:00 PM',
+    subtitleUr: 'صبح 7:30 بجے سے دوپہر 12:00 بجے تک۔',
+    subtitleEn: 'From 7:30 AM to 12:00 PM.',
+    descUr: 'باقاعدہ کلاس روم تدریس: نیا سبق، سبقی، ناظرہ مع تجوید اور حفظِ قرآن کی بنیادی تدریسی نشست۔',
+    descEn: 'Formal classroom instruction: Sabaq, Sabqi, Nazra with Tajweed, and core Quranic memorization session.',
+    isTeachingSession: true,
+    typeUr: 'باقاعدہ تدریسی نشست',
+    typeEn: 'Formal Teaching Session',
+    iconName: 'Sun'
+  },
+  {
+    id: 'period-2',
+    periodNum: 2,
+    titleUr: 'دوسرا دورانیہ — بعد دوپہر کی نشست',
+    titleEn: 'Period 2 — Afternoon Study Session',
+    timeRangeUr: 'دوپہر 2:30 تا نمازِ عصر',
+    timeRangeEn: '2:30 PM – Asr Prayer',
+    subtitleUr: 'دوپہر 2:30 بجے سے نمازِ عصر تک۔',
+    subtitleEn: 'From 2:30 PM until Asr Prayer.',
+    descUr: 'دوپہر کی تدریسی و مشقی نشست: تجویدی قواعد کا اعادہ، مخارج کی درستی اور باجماعت نمازِ عصر کی تیاری۔',
+    descEn: 'Afternoon instruction and drill: Tajweed rules practice, Makharij precision, and preparation for Asr Salah.',
+    isTeachingSession: true,
+    typeUr: 'تدریسی و مشقی نشست',
+    typeEn: 'Instruction & Practice Session',
+    iconName: 'Clock'
+  },
+  {
+    id: 'period-3',
+    periodNum: 3,
+    titleUr: 'تیسرا دورانیہ — بعد عصر کا وقت',
+    titleEn: 'Period 3 — Post-Asr Revision Circle',
+    timeRangeUr: 'نمازِ عصر تا نمازِ مغرب',
+    timeRangeEn: 'Asr Prayer – Maghrib Prayer',
+    subtitleUr: 'نمازِ عصر سے نمازِ مغرب تک۔',
+    subtitleEn: 'From Asr Prayer to Maghrib Prayer.',
+    descUr: 'دہرائی و مطالعہ: حفظ و ناظرہ کی پختہ دہرائی، باہمی تکرار، مسنون دعاؤں کا اعادہ اور شام کے تعلیمی حلقے۔',
+    descEn: 'Revision and consolidation: rigorous memorization review, peer recitation, and evening study circles.',
+    isTeachingSession: false,
+    typeUr: 'دہرائی و تکرار',
+    typeEn: 'Consolidation & Review',
+    iconName: 'BookOpen'
+  },
+  {
+    id: 'period-4',
+    periodNum: 4,
+    titleUr: 'چوتھا دورانیہ — بعد مغرب کا وقت',
+    titleEn: 'Period 4 — Post-Maghrib Manzil & Tarbiyah',
+    timeRangeUr: 'نمازِ مغرب تا نمازِ عشاء',
+    timeRangeEn: 'Maghrib Prayer – Isha Prayer',
+    subtitleUr: 'نمازِ مغرب سے نمازِ عشاء تک۔',
+    subtitleEn: 'From Maghrib Prayer to Isha Prayer.',
+    descUr: 'منزل و اخلاقی رہنمائی: روزانہ منزل سنانے کا اہتمام، اخلاقی و تربیتی ہدایات اور باجماعت نمازِ عشاء کی پابندی۔',
+    descEn: 'Manzil recitation & moral mentoring: daily Manzil evaluation, character-building, and preparation for Isha Salah.',
+    isTeachingSession: false,
+    typeUr: 'منزل و تربیتی نشست',
+    typeEn: 'Manzil & Mentoring Session',
+    iconName: 'Moon'
+  }
+];
 
 export const WEEKLY_SCHEDULE: ScheduleDay[] = [
   {
@@ -8,8 +75,8 @@ export const WEEKLY_SCHEDULE: ScheduleDay[] = [
     statusUr: 'تعلیم جاری',
     statusEn: 'Classes Active',
     isHoliday: false,
-    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
-    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+    timingsUr: 'صبح 7:30 تا 12:00 / دوپہر 2:30 تا عشاء',
+    timingsEn: '7:30 AM - 12:00 PM / 2:30 PM - Isha'
   },
   {
     id: 'sun',
@@ -18,8 +85,8 @@ export const WEEKLY_SCHEDULE: ScheduleDay[] = [
     statusUr: 'تعلیم جاری',
     statusEn: 'Classes Active',
     isHoliday: false,
-    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
-    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+    timingsUr: 'صبح 7:30 تا 12:00 / دوپہر 2:30 تا عشاء',
+    timingsEn: '7:30 AM - 12:00 PM / 2:30 PM - Isha'
   },
   {
     id: 'mon',
@@ -28,8 +95,8 @@ export const WEEKLY_SCHEDULE: ScheduleDay[] = [
     statusUr: 'تعلیم جاری',
     statusEn: 'Classes Active',
     isHoliday: false,
-    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
-    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+    timingsUr: 'صبح 7:30 تا 12:00 / دوپہر 2:30 تا عشاء',
+    timingsEn: '7:30 AM - 12:00 PM / 2:30 PM - Isha'
   },
   {
     id: 'tue',
@@ -38,8 +105,8 @@ export const WEEKLY_SCHEDULE: ScheduleDay[] = [
     statusUr: 'تعلیم جاری',
     statusEn: 'Classes Active',
     isHoliday: false,
-    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
-    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+    timingsUr: 'صبح 7:30 تا 12:00 / دوپہر 2:30 تا عشاء',
+    timingsEn: '7:30 AM - 12:00 PM / 2:30 PM - Isha'
   },
   {
     id: 'wed',
@@ -48,8 +115,8 @@ export const WEEKLY_SCHEDULE: ScheduleDay[] = [
     statusUr: 'تعلیم جاری',
     statusEn: 'Classes Active',
     isHoliday: false,
-    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
-    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+    timingsUr: 'صبح 7:30 تا 12:00 / دوپہر 2:30 تا عشاء',
+    timingsEn: '7:30 AM - 12:00 PM / 2:30 PM - Isha'
   },
   {
     id: 'thu',
@@ -58,8 +125,8 @@ export const WEEKLY_SCHEDULE: ScheduleDay[] = [
     statusUr: 'تعلیم جاری',
     statusEn: 'Classes Active',
     isHoliday: false,
-    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
-    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+    timingsUr: 'صبح 7:30 تا 12:00 / دوپہر 2:30 تا عشاء',
+    timingsEn: '7:30 AM - 12:00 PM / 2:30 PM - Isha'
   },
   {
     id: 'fri',

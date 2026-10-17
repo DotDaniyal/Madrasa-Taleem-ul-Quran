@@ -12,6 +12,7 @@ import { Announcements } from './pages/Announcements';
 import { Contact } from './pages/Contact';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { WeeklySchedule } from './components/WeeklySchedule';
+import { DailyTimetable } from './components/DailyTimetable';
 
 export default function App() {
   const [currentLang, setLang] = useState<Language>('ur');
@@ -105,7 +106,8 @@ export default function App() {
           />
         )}
         {activeTab === 'schedule' && (
-          <div className="py-8">
+          <div className="py-8 space-y-12">
+            <DailyTimetable currentLang={currentLang} />
             <WeeklySchedule currentLang={currentLang} />
           </div>
         )}

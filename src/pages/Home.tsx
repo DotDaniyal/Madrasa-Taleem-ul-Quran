@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Language, Program, Announcement, GalleryItem } from '../types';
 import { WeeklySchedule } from '../components/WeeklySchedule';
+import { DailyTimetable } from '../components/DailyTimetable';
+import { PrayerSection } from '../components/PrayerSection';
+import { AcademicAssessments } from '../components/AcademicAssessments';
 import { 
   BookOpen, 
   Award, 
@@ -14,8 +17,6 @@ import {
   Phone,
   MessageCircle,
   Clock,
-  Compass,
-  Star,
   GraduationCap
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -47,27 +48,17 @@ export const Home: React.FC<HomeProps> = ({
       hadithTranslation: '”تم میں سے بہترین شخص وہ ہے جو قرآن سیکھے اور سکھائے۔“ (صحیح بخاری)',
       applyBtn: 'آن لائن داخلہ فارم',
       programsBtn: 'تمام تعلیمی پروگرامز',
-      scheduleBtn: 'ہفتہ وار شیڈول دیکھیں',
-      stats1: 'فارغ التحصیل حفاظ',
-      stats2: 'سند یافتہ اساتذہ',
-      stats3: 'زیرِ تعلیم طلباء',
-      stats4: 'سالہ مسلسل خدمات',
-      whyTitle: 'والدین مدرسہ تعلیم القرآن فریال مسجد کا انتخاب کیوں کرتے ہیں؟',
-      whyDesc: 'صحیح مخارج، تجوید کی پختگی، اخلاقی تربیت اور ایک پرسکون اسلامی ماحول ہمارے ادارے کی پہچان ہے۔',
-      feature1Title: 'سند یافتہ قراء و حفاظ',
-      feature1Desc: 'درسِ نظامی اور قراءتِ سبعہ کے ماہر اور شفیق اساتذہ کرام کی زیرِ سرپرستی تعلیم۔',
-      feature2Title: 'محفوظ و پرسکون تعلیمی ماحول',
-      feature2Desc: 'ہوا دار کلاس رومز، مکمل نظم و ضبط اور بچوں کی باقاعدہ اخلاقی و دینی نگرانی۔',
-      feature3Title: 'روزانہ پختہ دہرائی و منزل',
-      feature3Desc: 'حفظ کرنے والے طلباء کے لیے منظم دہرائی، سبقی اور منزل کی پختگی کا جامع نظام۔',
-      feature4Title: 'والدین کو باقاعدہ رپورٹ',
-      feature4Desc: 'طلباء کی ماہانہ کارکردگی، حاضری اور روزانہ اسباق سے والدین کو باخبر رکھنا۔',
-      programsTitle: 'ہمارے بنیادی تعلیمی پروگرامز',
-      programsDesc: 'حفظِ قرآن سے لے کر نورانی قاعدہ اور تجوید تک، ہر عمر کے بچوں کے لیے متوازن نصاب۔',
+      scheduleBtn: 'روزانہ کا نظام الاوقات',
+      
+      // Core Programs Section
+      programsHeading: 'بنیادی تعلیمی پروگرامز',
+      programsSubheading: 'شعبہ حفظ القرآن الكريم اور ناظرہ قرآن و تجوید',
+      programsDesc: 'مدرسہ تعلیم القرآن فریال مسجد میں قرآنِ پاک کے درست مخارج، تجوید کی پختگی اور منظم دہرائی کے ساتھ دو بنیادی تعلیمی شعبہ جات فعال ہیں:',
+      viewAllPrograms: 'تمام کورسز کی تفصیل دیکھیں',
+      
+      // Announcements & CTA
       announcementsTitle: 'اہم اعلانات و نوٹس بورڈ',
       viewAll: 'تمام دیکھیں',
-      galleryTitle: 'شعبہ جات و تعلیمی سہولیات',
-      galleryDesc: 'مدرسہ تعلیم القرآن فریال مسجد کے منظم شعبہ جات اور تعلیمی انتظامات۔',
       ctaTitle: 'اپنے بچے کا مستقبل قرآنِ پاک کی روشنی سے روشن کریں',
       ctaDesc: 'سال 2026ء کے داخلے جاری ہیں۔ محدود نشستوں کے باعث آج ہی اپنی درخواست آن لائن جمع کروائیں۔',
       whatsappContact: 'واٹس ایپ رابطہ',
@@ -81,51 +72,31 @@ export const Home: React.FC<HomeProps> = ({
       hadithTranslation: '"The best among you are those who learn the Quran and teach it." (Sahih al-Bukhari)',
       applyBtn: 'Online Admission Form',
       programsBtn: 'Educational Programs',
-      scheduleBtn: 'View Weekly Schedule',
-      stats1: 'Graduated Huffaz',
-      stats2: 'Certified Teachers',
-      stats3: 'Enrolled Students',
-      stats4: 'Years of Service',
-      whyTitle: 'Why Parents Choose Madrasa Taleem-ul-Quran Faryal Masjid',
-      whyDesc: 'Precise articulation, mastery of Tajweed, exemplary morals, and a peaceful environment define our institute.',
-      feature1Title: 'Certified Huffaz & Scholars',
-      feature1Desc: 'Supervised by graduates of Dars-e-Nizami and Qiraat-e-Saba with immense dedication.',
-      feature2Title: 'Safe & Pure Atmosphere',
-      feature2Desc: 'Well-ventilated classrooms, positive discipline, and moral supervision.',
-      feature3Title: 'Rigorous Daily Revision',
-      feature3Desc: 'Structured daily Sabaq, Sabqi, and Manzil consolidation system.',
-      feature4Title: 'Regular Parent Reports',
-      feature4Desc: 'Monthly performance and attendance updates shared with guardians.',
-      programsTitle: 'Core Educational Programs',
-      programsDesc: 'From Noorani Qaida to full Hifz-ul-Quran and advanced Tajweed.',
+      scheduleBtn: 'Daily Timetable',
+
+      // Core Programs Section
+      programsHeading: 'Core Quranic Education Programs',
+      programsSubheading: 'Sho\'ba-e-Hifz-ul-Quran & Nazra-ul-Quran with Tajweed',
+      programsDesc: 'At Madrasa Taleem-ul-Quran Faryal Masjid, Quranic recitation and memorization are imparted with precise Makharij, Tajweed mastery, and disciplined daily revision:',
+      viewAllPrograms: 'View All Course Details',
+
+      // Announcements & CTA
       announcementsTitle: 'Important Notices & Announcements',
       viewAll: 'View All',
-      galleryTitle: 'Departments & Facilities',
-      galleryDesc: 'Structured educational wings and learning environments of the madrasa.',
       ctaTitle: 'Illuminate Your Child’s Future with the Light of the Quran',
       ctaDesc: 'Admissions open for 2026. Limited seats available; apply online today.',
       whatsappContact: 'WhatsApp Chat',
     }
   }[currentLang];
 
-  const stats = [
-    { number: '250+', label: t.stats1, icon: Award, color: 'from-amber-600 to-amber-700' },
-    { number: '12+', label: t.stats2, icon: Users, color: 'from-emerald-700 to-emerald-800' },
-    { number: '300+', label: t.stats3, icon: BookOpen, color: 'from-teal-700 to-teal-800' },
-    { number: '15+', label: t.stats4, icon: ShieldCheck, color: 'from-emerald-800 to-emerald-950' },
-  ];
-
-  const features = [
-    { title: t.feature1Title, desc: t.feature1Desc, icon: Award },
-    { title: t.feature2Title, desc: t.feature2Desc, icon: ShieldCheck },
-    { title: t.feature3Title, desc: t.feature3Desc, icon: BookOpen },
-    { title: t.feature4Title, desc: t.feature4Desc, icon: Users },
-  ];
+  // Primary Quranic Programs (Nazra & Hifz)
+  const corePrograms = programs.filter(p => p.id === 'hifz' || p.id === 'nazra');
+  const displayPrograms = corePrograms.length > 0 ? corePrograms : programs.slice(0, 2);
 
   return (
     <div className="space-y-16 pb-20 overflow-x-hidden">
       
-      {/* Hero Section with Islamic Architectural Motifs (No Fake Stock Photos) */}
+      {/* 2. HERO SECTION */}
       <section className="relative bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-950 text-white overflow-hidden py-20 lg:py-24">
         
         {/* Islamic Geometric Arabesque Pattern Background */}
@@ -186,25 +157,32 @@ export const Home: React.FC<HomeProps> = ({
                 </button>
 
                 <button
-                  onClick={() => setActiveTab('programs')}
+                  onClick={() => {
+                    const el = document.getElementById('daily-timetable');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      setActiveTab('schedule');
+                    }
+                  }}
                   className="w-full sm:w-auto bg-emerald-900/80 hover:bg-emerald-800 text-white border border-emerald-500/50 px-7 py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 cursor-pointer font-urdu"
                 >
-                  <BookOpen className="w-5 h-5 text-amber-300" />
-                  <span>{t.programsBtn}</span>
+                  <Clock className="w-5 h-5 text-amber-300" />
+                  <span>{t.scheduleBtn}</span>
                 </button>
 
                 <button
-                  onClick={() => setActiveTab('schedule')}
+                  onClick={() => setActiveTab('programs')}
                   className="w-full sm:w-auto bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 px-6 py-4 rounded-2xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer font-urdu text-sm"
                 >
-                  <Clock className="w-4 h-4 text-emerald-400" />
-                  <span>{t.scheduleBtn}</span>
+                  <BookOpen className="w-4 h-4 text-emerald-400" />
+                  <span>{t.programsBtn}</span>
                 </button>
               </div>
 
             </motion.div>
 
-            {/* Right Column: Refined Islamic Architectural Crest (Zero Fake Stock Photos) */}
+            {/* Right Column: Preserved Official Logo & Crest */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -213,14 +191,14 @@ export const Home: React.FC<HomeProps> = ({
             >
               <div className="bg-gradient-to-br from-emerald-900/90 via-teal-950 to-slate-950 rounded-3xl p-8 border-2 border-amber-400/40 shadow-2xl space-y-6 relative overflow-hidden text-center">
                 
-                {/* Islamic Arch Motif Header */}
+                {/* Official Logo / Crest Motif */}
                 <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg text-emerald-950 font-bold">
                   <BookOpen className="w-10 h-10" />
                 </div>
 
                 <div className="space-y-2">
-                  <span className="bg-emerald-800/80 text-amber-300 text-xs px-3.5 py-1 rounded-full font-bold border border-emerald-600">
-                    {isUrdu ? 'مستند دینی درسگاہ' : 'Verified Islamic Madrasa'}
+                  <span className="bg-emerald-800/80 text-amber-300 text-xs px-3.5 py-1 rounded-full font-bold border border-emerald-600 font-urdu">
+                    {isUrdu ? 'مستند دینی ادارہ' : 'Verified Islamic Madrasa'}
                   </span>
                   <h3 className="text-2xl font-bold text-white font-urdu pt-1">
                     {t.title}
@@ -246,7 +224,7 @@ export const Home: React.FC<HomeProps> = ({
                 <div className="bg-emerald-950/80 rounded-2xl p-3.5 border border-amber-400/30 flex items-center justify-between text-xs text-emerald-200 font-urdu">
                   <span className="flex items-center gap-1.5 font-bold text-white">
                     <Clock className="w-4 h-4 text-amber-400" />
-                    <span>{isUrdu ? 'ہفتہ تا جمعرات کلاسز' : 'Sat - Thu Classes'}</span>
+                    <span>{isUrdu ? 'ہفتہ تا جمعرات تدریس' : 'Sat - Thu Academic Days'}</span>
                   </span>
                   <span className="bg-amber-400 text-emerald-950 font-bold px-2 py-0.5 rounded-lg text-[11px]">
                     {isUrdu ? 'جمعہ تعطیل' : 'Fri Holiday'}
@@ -260,80 +238,71 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-      {/* Confirmed Weekly Schedule Section (Prominently Highlighted) */}
-      <WeeklySchedule currentLang={currentLang} />
-
-      {/* Stats Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 3. PROMINENT STATISTICS: 22 TEACHERS & 400+ STUDENTS (Immediately after Hero) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-20">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-3xl shadow-lg border border-slate-200 p-8 grid grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          {stats.map((stat, idx) => {
-            const Icon = stat.icon;
-            return (
-              <div 
-                key={idx} 
-                className="flex items-center gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-emerald-200 hover-lift transition-all"
-              >
-                <div className={`w-13 h-13 rounded-2xl bg-gradient-to-br ${stat.color} text-white flex items-center justify-center shrink-0 shadow-sm`}>
-                  <Icon className="w-6 h-6 text-amber-200" />
-                </div>
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 font-urdu">{stat.number}</h3>
-                  <p className="text-xs text-slate-600 font-medium font-urdu">{stat.label}</p>
-                </div>
+          {/* Card 1: 22 Teachers */}
+          <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-xl border-2 border-emerald-100 hover:border-emerald-300 hover-lift transition-all flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-start relative overflow-hidden group">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-800 to-teal-900 text-amber-300 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+              <GraduationCap className="w-10 h-10" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-baseline justify-center sm:justify-start gap-2.5">
+                <span className="text-5xl sm:text-6xl font-extrabold text-emerald-950 font-mono tracking-tight" dir="ltr">
+                  22
+                </span>
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 font-urdu">
+                  {isUrdu ? 'اساتذہ' : 'Teachers'}
+                </span>
               </div>
-            );
-          })}
-        </motion.div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5 }}
-          className="space-y-12"
-        >
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full font-urdu">
-              {isUrdu ? 'ادارے کے امتیازات' : 'Why Choose Us'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 font-urdu">
-              {t.whyTitle}
-            </h2>
-            <p className="text-slate-600 text-sm leading-relaxed font-urdu">
-              {t.whyDesc}
-            </p>
+              <h3 className="text-2xl font-bold text-slate-900 font-urdu">
+                {isUrdu ? 'اساتذہ کرام' : 'Teachers'}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed font-urdu">
+                {isUrdu 
+                  ? 'قرآنِ کریم کی تعلیم کے لیے 22 اساتذہ کرام خدمات انجام دے رہے ہیں۔' 
+                  : 'A dedicated team of 22 teachers serving Quranic education.'}
+              </p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feat, idx) => {
-              const Icon = feat.icon;
-              return (
-                <div 
-                  key={idx} 
-                  className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 hover:border-emerald-300 hover-lift transition-all space-y-4"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-base font-bold text-slate-900 font-urdu">{feat.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed font-urdu">{feat.desc}</p>
-                </div>
-              );
-            })}
+          {/* Card 2: 400+ Students */}
+          <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-xl border-2 border-amber-200/80 hover:border-amber-400 hover-lift transition-all flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-start relative overflow-hidden group">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-500 to-amber-600 text-emerald-950 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+              <BookOpen className="w-10 h-10" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-baseline justify-center sm:justify-start gap-2.5">
+                <span className="text-5xl sm:text-6xl font-extrabold text-amber-700 font-mono tracking-tight" dir="ltr">
+                  400+
+                </span>
+                <span className="text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 font-urdu">
+                  {isUrdu ? 'طلبہ' : 'Students'}
+                </span>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 font-urdu">
+                {isUrdu ? 'طلبہ کرام' : 'Students'}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed font-urdu">
+                {isUrdu 
+                  ? 'تقریباً 400 طلبہ مدرسے کے تعلیمی ماحول سے مستفید ہو رہے ہیں۔' 
+                  : 'Approximately 400 students benefit from the madrasa\'s educational environment.'}
+              </p>
+            </div>
           </div>
         </motion.div>
       </section>
 
-      {/* Core Educational Programs */}
+      {/* 4. DAILY MADRASA TIMETABLE (4 Periods) */}
+      <DailyTimetable currentLang={currentLang} />
+
+      {/* 5. CORE QURANIC EDUCATION PROGRAMS: NAZRA-UL-QURAN & SHO'BA-E-HIFZ-UL-QURAN */}
       <section className="bg-slate-100/70 py-16 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -345,59 +314,85 @@ export const Home: React.FC<HomeProps> = ({
           >
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 font-urdu">
-                  {t.programsTitle}
+                <span className="bg-emerald-100 text-emerald-900 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm font-urdu mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>{t.programsHeading}</span>
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 font-urdu">
+                  {t.programsSubheading}
                 </h2>
-                <p className="text-sm text-slate-600 mt-1 font-urdu">
+                <p className="text-sm text-slate-600 mt-1 font-urdu max-w-2xl">
                   {t.programsDesc}
                 </p>
               </div>
               <button
                 onClick={() => setActiveTab('programs')}
-                className="text-emerald-800 hover:text-emerald-900 font-bold text-sm flex items-center gap-1 cursor-pointer bg-white px-4 py-2.5 rounded-xl shadow-sm border border-slate-200"
+                className="text-emerald-800 hover:text-emerald-900 font-bold text-sm flex items-center gap-1.5 cursor-pointer bg-white px-5 py-3 rounded-2xl shadow-sm border border-slate-200 hover-lift transition-all"
               >
-                <span className="font-urdu">{t.viewAll}</span>
+                <span className="font-urdu">{t.viewAllPrograms}</span>
                 {isUrdu ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {programs.slice(0, 3).map((prog) => (
+            {/* Spotlighting the 2 Core Programs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {displayPrograms.map((prog) => (
                 <div 
                   key={prog.id} 
-                  className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover-lift transition-all"
+                  className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover-lift transition-all p-8 space-y-6 group hover:border-emerald-300"
                 >
-                  <div className="p-7 space-y-4">
-                    <div className="w-13 h-13 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center">
-                      <BookOpen className="w-6 h-6" />
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-50 text-emerald-800 flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <BookOpen className="w-7 h-7 text-emerald-700" />
+                      </div>
+                      <span className="bg-emerald-50 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold border border-emerald-200 font-urdu">
+                        {isUrdu ? 'بنیادی تعلیمی شعبہ' : 'Core Quranic Wing'}
+                      </span>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 font-urdu">
+
+                    <h3 className="text-2xl font-bold text-slate-900 font-urdu">
                       {isUrdu ? prog.titleUr : prog.titleEn}
                     </h3>
-                    <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 font-urdu">
+                    
+                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-urdu">
                       {isUrdu ? prog.descUr : prog.descEn}
                     </p>
-                    <div className="pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600 bg-slate-50 p-4 rounded-2xl">
-                      <div className="flex justify-between font-urdu">
-                        <span className="font-bold">{isUrdu ? 'مدتِ کورس:' : 'Duration:'}</span>
-                        <span>{isUrdu ? prog.durationUr : prog.durationEn}</span>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-slate-600 bg-slate-50 p-4 rounded-2xl font-urdu">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span><strong>{isUrdu ? 'مدتِ کورس:' : 'Duration:'}</strong> {isUrdu ? prog.durationUr : prog.durationEn}</span>
                       </div>
-                      <div className="flex justify-between font-urdu">
-                        <span className="font-bold">{isUrdu ? 'اہلیتِ عمر:' : 'Age Limit:'}</span>
-                        <span>{isUrdu ? prog.ageUr : prog.ageEn}</span>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span><strong>{isUrdu ? 'اہلیتِ عمر:' : 'Age Limit:'}</strong> {isUrdu ? prog.ageUr : prog.ageEn}</span>
                       </div>
                     </div>
+
+                    <div className="space-y-2 pt-2">
+                      <p className="text-xs font-bold text-slate-800 font-urdu">{isUrdu ? 'نمایاں خصوصیات:' : 'Key Highlights:'}</p>
+                      <ul className="space-y-1.5 text-xs text-slate-600 font-urdu">
+                        {(isUrdu ? prog.featuresUr : prog.featuresEn).map((feat, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                  <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                     <span className="text-xs font-bold text-emerald-800 flex items-center gap-1.5 font-urdu">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                       <span>{isUrdu ? 'داخلے جاری ہیں' : 'Admissions Open'}</span>
                     </span>
                     <button
                       onClick={() => setActiveTab('admissions')}
-                      className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer font-urdu"
+                      className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl font-bold transition-colors cursor-pointer font-urdu shadow-sm"
                     >
-                      {isUrdu ? 'داخلہ لیں' : 'Apply'}
+                      {isUrdu ? 'آن لائن داخلہ لیں' : 'Apply Online'}
                     </button>
                   </div>
                 </div>
@@ -407,30 +402,42 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-      {/* Announcements & Facilities Preview */}
+      {/* 6, 7, 8. PRAYER SECTION: FIVE DAILY PRAYERS, PRAYER COMPETITIONS & ANNUAL AWARDS */}
+      <PrayerSection currentLang={currentLang} />
+
+      {/* 9. MONTHLY ASSESSMENTS & ANNUAL EXAMINATIONS */}
+      <AcademicAssessments currentLang={currentLang} />
+
+      {/* 10. FRIDAY WEEKLY HOLIDAY INFORMATION & ACADEMIC DAYS */}
+      <WeeklySchedule currentLang={currentLang} />
+
+      {/* 11. ANNOUNCEMENTS PREVIEW & CTA BANNER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          
-          {/* Announcements Preview */}
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-urdu">
+        <div className="space-y-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full font-urdu mb-1 inline-block">
+                {isUrdu ? 'تازہ ترین نوٹس' : 'Latest Notices'}
+              </span>
+              <h2 className="text-xl sm:text-3xl font-bold text-slate-900 font-urdu">
                 {t.announcementsTitle}
               </h2>
-              <button
-                onClick={() => setActiveTab('announcements')}
-                className="text-emerald-800 hover:text-emerald-900 text-sm font-semibold cursor-pointer font-urdu"
-              >
-                {t.viewAll}
-              </button>
             </div>
+            <button
+              onClick={() => setActiveTab('announcements')}
+              className="text-emerald-800 hover:text-emerald-900 text-sm font-semibold cursor-pointer font-urdu"
+            >
+              {t.viewAll}
+            </button>
+          </div>
 
-            <div className="space-y-4">
-              {announcements.slice(0, 3).map((ann) => (
-                <div 
-                  key={ann.id} 
-                  className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-300 transition-all space-y-2"
-                >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {announcements.slice(0, 3).map((ann) => (
+              <div 
+                key={ann.id} 
+                className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 hover:border-emerald-300 transition-all space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold font-urdu">
                       {isUrdu ? ann.categoryUr : ann.categoryEn}
@@ -440,55 +447,17 @@ export const Home: React.FC<HomeProps> = ({
                   <h3 className="font-bold text-slate-900 text-base font-urdu">
                     {isUrdu ? ann.titleUr : ann.titleEn}
                   </h3>
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-urdu">
+                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-urdu">
                     {isUrdu ? ann.contentUr : ann.contentEn}
                   </p>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Departments & Facility Badges (Tasteful Architectural Layout - Zero Stock Photos) */}
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-urdu">
-                  {t.galleryTitle}
-                </h2>
               </div>
-              <button
-                onClick={() => setActiveTab('gallery')}
-                className="text-emerald-800 hover:text-emerald-900 text-sm font-semibold cursor-pointer font-urdu"
-              >
-                {t.viewAll}
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {gallery.slice(0, 4).map((item) => (
-                <div 
-                  key={item.id} 
-                  onClick={() => setActiveTab('gallery')}
-                  className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-300 hover-lift transition-all cursor-pointer space-y-2"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
-                    <BookOpen className="w-5 h-5 text-emerald-700" />
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-900 font-urdu line-clamp-1">
-                    {isUrdu ? item.titleUr : item.titleEn}
-                  </h3>
-                  <p className="text-xs text-slate-500 font-urdu line-clamp-2 leading-relaxed">
-                    {isUrdu ? item.descUr : item.descEn}
-                  </p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
-
         </div>
       </section>
 
-      {/* CTA Banner */}
+      {/* FINAL CALL TO ACTION BANNER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

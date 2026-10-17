@@ -11,6 +11,23 @@ export interface ScheduleDay {
   timingsEn: string;
 }
 
+export interface DailyPeriod {
+  id: string;
+  periodNum: number;
+  titleUr: string;
+  titleEn: string;
+  timeRangeUr: string;
+  timeRangeEn: string;
+  subtitleUr: string;
+  subtitleEn: string;
+  descUr: string;
+  descEn: string;
+  isTeachingSession: boolean;
+  typeUr: string;
+  typeEn: string;
+  iconName: string;
+}
+
 export interface Program {
   id: string;
   titleUr: string;
