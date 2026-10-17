@@ -1,16 +1,14 @@
 import React from 'react';
-import { CalligraphyFont, Language } from '../types';
+import { Language } from '../types';
 import { BookOpen, Phone, Mail, MapPin, Heart, Shield, Award, Clock } from 'lucide-react';
-import { CALLIGRAPHY_FONTS } from '../components/CalligraphyFontPicker';
 
 interface FooterProps {
   currentLang: Language;
   setActiveTab: (tab: string) => void;
-  currentFont: CalligraphyFont;
 }
 
-export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, currentFont }) => {
-  const selectedFontObj = CALLIGRAPHY_FONTS.find(f => f.id === currentFont) || CALLIGRAPHY_FONTS[0];
+export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab }) => {
+  const isUrdu = currentLang === 'ur';
 
   const t = {
     ur: {
@@ -20,12 +18,15 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
       home: 'ہوم پیج',
       about: 'تعارف مدرسہ',
       programs: 'تعلیمی پروگرامز',
+      schedule: 'ہفتہ وار شیڈول',
       admissions: 'آن لائن داخلہ',
-      gallery: 'تصویر گیلری',
+      gallery: 'شعبہ جات و سہولیات',
+      announcements: 'اعلانات و نوٹس',
       contact: 'رابطہ کی تفصیلات',
-      timings: 'اوقاتِ کار',
-      timingVal: 'پیر تا ہفتہ: صبح 7:00 بجے تا مغرب',
-      address: 'پتہ: مدرسہ تعلیم القرآن فریال مسجد، مین روڈ، کراچی، پاکستان',
+      timings: 'اوقاتِ تعلیم و کار',
+      timingVal: 'ہفتہ تا جمعرات: صبح 7:00 بجے تا مغرب',
+      holidayNotice: 'جمعہ: ہفتہ وار تعطیل (نمازِ جمعہ)',
+      address: 'مدرسہ تعلیم القرآن فریال مسجد، کراچی، پاکستان',
       rights: 'جملہ حقوق محفوظ ہیں۔ مدرسہ تعلیم القرآن فریال مسجد © 2026',
       contactInfo: 'رابطہ نمبر',
     },
@@ -36,12 +37,15 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
       home: 'Home',
       about: 'About Madrasa',
       programs: 'Educational Programs',
+      schedule: 'Weekly Schedule',
       admissions: 'Online Admission',
-      gallery: 'Photo Gallery',
+      gallery: 'Departments & Facilities',
+      announcements: 'Announcements',
       contact: 'Contact Details',
-      timings: 'Office Timings',
-      timingVal: 'Mon - Sat: 7:00 AM - Maghrib',
-      address: 'Address: Madrasa Taleem-ul-Quran Faryal Masjid, Main Road, Karachi, Pakistan',
+      timings: 'Academic & Office Timings',
+      timingVal: 'Saturday to Thursday: 7:00 AM - Maghrib',
+      holidayNotice: 'Friday: Weekly Holiday (Jummah Prayer)',
+      address: 'Madrasa Taleem-ul-Quran Faryal Masjid, Karachi, Pakistan',
       rights: 'All rights reserved. Madrasa Taleem-ul-Quran Faryal Masjid © 2026',
       contactInfo: 'Contact Phone',
     }
@@ -57,10 +61,10 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-white shadow-lg animate-pulse-glow">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-white shadow-lg animate-pulse-glow shrink-0">
                 <BookOpen className="w-6 h-6 text-amber-300 animate-float" />
               </div>
-              <h2 className={`text-xl font-bold text-white ${selectedFontObj.fontClass}`}>
+              <h2 className="text-xl font-bold text-white font-urdu">
                 {t.title}
               </h2>
             </div>
@@ -69,13 +73,13 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
             </p>
             <div className="flex items-center gap-2 text-xs text-amber-400 font-medium pt-2">
               <Shield className="w-4 h-4" />
-              <span className="font-urdu">{currentLang === 'ur' ? 'تصدیق شدہ اور محفوظ ادارہ' : 'Certified & Trusted Institution'}</span>
+              <span className="font-urdu">{isUrdu ? 'تصدیق شدہ اور محفوظ دینی ادارہ' : 'Certified & Trusted Islamic Institute'}</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className={`text-white font-bold text-base mb-4 border-b border-slate-800 pb-2 ${selectedFontObj.fontClass}`}>
+            <h3 className="text-white font-bold text-base mb-4 border-b border-slate-800 pb-2 font-urdu">
               {t.quickLinks}
             </h3>
             <ul className="space-y-2.5 text-sm">
@@ -95,13 +99,18 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
                 </button>
               </li>
               <li>
+                <button onClick={() => { setActiveTab('schedule'); window.scrollTo(0,0); }} className="hover:text-amber-400 transition-colors cursor-pointer font-urdu">
+                  {t.schedule}
+                </button>
+              </li>
+              <li>
                 <button onClick={() => { setActiveTab('admissions'); window.scrollTo(0,0); }} className="hover:text-amber-400 transition-colors cursor-pointer font-urdu">
                   {t.admissions}
                 </button>
               </li>
               <li>
-                <button onClick={() => { setActiveTab('gallery'); window.scrollTo(0,0); }} className="hover:text-amber-400 transition-colors cursor-pointer font-urdu">
-                  {t.gallery}
+                <button onClick={() => { setActiveTab('announcements'); window.scrollTo(0,0); }} className="hover:text-amber-400 transition-colors cursor-pointer font-urdu">
+                  {t.announcements}
                 </button>
               </li>
             </ul>
@@ -109,7 +118,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
 
           {/* Contact Details */}
           <div>
-            <h3 className={`text-white font-bold text-base mb-4 border-b border-slate-800 pb-2 ${selectedFontObj.fontClass}`}>
+            <h3 className="text-white font-bold text-base mb-4 border-b border-slate-800 pb-2 font-urdu">
               {t.contact}
             </h3>
             <ul className="space-y-3 text-sm">
@@ -130,7 +139,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
 
           {/* Timings */}
           <div>
-            <h3 className={`text-white font-bold text-base mb-4 border-b border-slate-800 pb-2 ${selectedFontObj.fontClass}`}>
+            <h3 className="text-white font-bold text-base mb-4 border-b border-slate-800 pb-2 font-urdu">
               {t.timings}
             </h3>
             <div className="space-y-3 text-sm">
@@ -138,8 +147,11 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
                 <Clock className="w-4 h-4 text-amber-400 shrink-0" />
                 <span className="font-urdu text-xs sm:text-sm">{t.timingVal}</span>
               </div>
-              <div className="p-3.5 bg-slate-900 rounded-2xl border border-slate-800 text-xs text-slate-400 font-urdu">
-                {currentLang === 'ur' ? 'والدین ملاقات کا وقت: بروز اتوار صبح 9 بجے تا 12 بجے' : 'Parent Visit Hours: Sunday 9:00 AM - 12:00 PM'}
+              <div className="p-3.5 bg-emerald-950/60 rounded-2xl border border-emerald-800/40 text-xs text-amber-200 font-urdu">
+                {t.holidayNotice}
+              </div>
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 text-xs text-slate-400 font-urdu">
+                {isUrdu ? 'والدین ملاقات کا وقت: بروز اتوار صبح 9 بجے تا 12 بجے' : 'Parent Visit Hours: Sunday 9:00 AM - 12:00 PM'}
               </div>
             </div>
           </div>
@@ -150,7 +162,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, curre
         <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-urdu">
           <p>{t.rights}</p>
           <div className="flex items-center gap-2">
-            <span>{currentLang === 'ur' ? 'خلوصِ نیت اور خدمتِ قرآن' : 'Dedicated to Quranic Education'}</span>
+            <span>{isUrdu ? 'خلوصِ نیت اور خدمتِ قرآن' : 'Dedicated to Quranic Education'}</span>
             <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400 animate-pulse" />
           </div>
         </div>

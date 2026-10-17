@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalligraphyFont, Language, AdmissionApplication, Announcement, ContactMessage } from '../types';
+import { Language, AdmissionApplication, Announcement, ContactMessage } from '../types';
 import { 
   Lock, 
   Unlock, 
@@ -10,13 +10,11 @@ import {
   XCircle, 
   Trash2, 
   Plus, 
-  ShieldAlert,
-  Calendar,
-  Phone,
-  Check,
-  Sparkles
+  Calendar, 
+  Phone, 
+  Check, 
+  Sparkles 
 } from 'lucide-react';
-import { CALLIGRAPHY_FONTS } from '../components/CalligraphyFontPicker';
 
 interface AdminDashboardProps {
   currentLang: Language;
@@ -26,7 +24,6 @@ interface AdminDashboardProps {
   setAnnouncements: React.Dispatch<React.SetStateAction<Announcement[]>>;
   messages: ContactMessage[];
   setMessages: React.Dispatch<React.SetStateAction<ContactMessage[]>>;
-  currentFont: CalligraphyFont;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -36,11 +33,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   announcements,
   setAnnouncements,
   messages,
-  setMessages,
-  currentFont
+  setMessages
 }) => {
   const isUrdu = currentLang === 'ur';
-  const selectedFontObj = CALLIGRAPHY_FONTS.find(f => f.id === currentFont) || CALLIGRAPHY_FONTS[0];
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
@@ -172,7 +167,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <Lock className="w-8 h-8" />
           </div>
           <div className="space-y-2">
-            <h2 className={`text-2xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.loginTitle}</h2>
+            <h2 className="text-2xl font-bold text-slate-900 font-urdu">{t.loginTitle}</h2>
             <p className="text-xs text-slate-500 font-urdu">{isUrdu ? 'مدرسہ انتظامیہ کے لیے مخصوص پورٹل' : 'Restricted for authorized staff'}</p>
           </div>
 
@@ -188,13 +183,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
               placeholder={t.passcodePlaceholder}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:border-emerald-600 font-mono"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:border-emerald-600 font-mono shadow-sm"
             />
             <button
               type="submit"
-              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all cursor-pointer animate-shimmer"
+              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all cursor-pointer animate-shimmer font-urdu"
             >
-              <span className={selectedFontObj.fontClass}>{t.loginBtn}</span>
+              <span>{t.loginBtn}</span>
             </button>
           </form>
         </div>
@@ -212,13 +207,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <Unlock className="w-6 h-6 animate-bounce-subtle" />
           </div>
           <div>
-            <h1 className={`text-2xl font-bold ${selectedFontObj.fontClass}`}>{t.portalTitle}</h1>
+            <h1 className="text-2xl font-bold font-urdu">{t.portalTitle}</h1>
             <p className="text-xs text-emerald-200 font-urdu">{isUrdu ? 'مدرسہ تعلیم القرآن فریال مسجد — انتظامیہ پینل' : 'Madrasa Taleem-ul-Quran Faryal Masjid — Admin Panel'}</p>
           </div>
         </div>
         <button
           onClick={() => setIsAuthenticated(false)}
-          className="bg-emerald-800 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-colors cursor-pointer border border-emerald-600/40"
+          className="bg-emerald-800 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-colors cursor-pointer border border-emerald-600/40 font-urdu"
         >
           {t.logout}
         </button>
@@ -228,41 +223,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-4">
         <button
           onClick={() => setActiveTab('applications')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 font-urdu ${
             activeTab === 'applications'
               ? 'bg-emerald-700 text-white shadow-lg'
               : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span className={selectedFontObj.fontClass}>{t.tabApps}</span>
-          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">{applications.length}</span>
+          <span>{t.tabApps}</span>
+          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-mono">{applications.length}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('announcements')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 font-urdu ${
             activeTab === 'announcements'
               ? 'bg-emerald-700 text-white shadow-lg'
               : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
           }`}
         >
           <Bell className="w-4 h-4" />
-          <span className={selectedFontObj.fontClass}>{t.tabAnn}</span>
-          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">{announcements.length}</span>
+          <span>{t.tabAnn}</span>
+          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-mono">{announcements.length}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('messages')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 font-urdu ${
             activeTab === 'messages'
               ? 'bg-emerald-700 text-white shadow-lg'
               : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
-          <span className={selectedFontObj.fontClass}>{t.tabMsg}</span>
-          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">{messages.length}</span>
+          <span>{t.tabMsg}</span>
+          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-mono">{messages.length}</span>
         </button>
       </div>
 
@@ -270,7 +265,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {activeTab === 'applications' && (
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
           <div className="p-6 border-b border-slate-100">
-            <h2 className={`text-xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.tabApps}</h2>
+            <h2 className="text-xl font-bold text-slate-900 font-urdu">{t.tabApps}</h2>
           </div>
           {applications.length === 0 ? (
             <div className="p-12 text-center text-slate-400 text-sm font-urdu">{t.noData}</div>
@@ -278,7 +273,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-right border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 text-slate-600 text-xs font-bold border-b border-slate-100">
+                  <tr className="bg-slate-50 text-slate-600 text-xs font-bold border-b border-slate-100 font-urdu">
                     <th className="p-4">ID</th>
                     <th className="p-4">{t.student}</th>
                     <th className="p-4">{t.program}</th>
@@ -292,13 +287,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <tr key={app.id} className="hover:bg-slate-50/50">
                       <td className="p-4 font-mono text-xs font-bold text-emerald-700" dir="ltr">{app.id}</td>
                       <td className="p-4 font-medium text-slate-900">
-                        <span className={selectedFontObj.fontClass}>{app.studentName}</span>
+                        <span className="font-urdu">{app.studentName}</span>
                         <span className="block text-xs text-slate-400 font-urdu">والد: {app.fatherName} ({app.age} سال)</span>
                       </td>
                       <td className="p-4 text-slate-600 font-urdu">{app.programId.toUpperCase()}</td>
                       <td className="p-4 font-mono text-xs text-slate-600" dir="ltr">{app.guardianPhone}</td>
                       <td className="p-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold font-urdu ${
                           app.status === 'approved' ? 'bg-emerald-100 text-emerald-800' :
                           app.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'
                         }`}>
@@ -343,10 +338,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           
           {/* Add Announcement Form */}
           <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 space-y-6">
-            <h2 className={`text-xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.addAnnTitle}</h2>
+            <h2 className="text-xl font-bold text-slate-900 font-urdu">{t.addAnnTitle}</h2>
             <form onSubmit={handleAddAnnouncement} className="space-y-4">
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.annTitleLabel}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.annTitleLabel}</label>
                 <input
                   type="text"
                   required
@@ -358,7 +353,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.annCatLabel}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.annCatLabel}</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
@@ -372,7 +367,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.annContentLabel}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.annContentLabel}</label>
                 <textarea
                   required
                   rows={4}
@@ -389,25 +384,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   id="imp"
                   checked={isImportant}
                   onChange={(e) => setIsImportant(e.target.checked)}
-                  className="w-4 h-4 text-emerald-600 rounded border-slate-300"
+                  className="w-4 h-4 text-emerald-600 rounded border-slate-300 cursor-pointer"
                 />
-                <label htmlFor="imp" className={`text-xs font-bold text-slate-700 cursor-pointer ${selectedFontObj.fontClass}`}>
+                <label htmlFor="imp" className="text-xs font-bold text-slate-700 cursor-pointer font-urdu">
                   {t.importantCheck}
                 </label>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition-all cursor-pointer animate-shimmer"
+                className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition-all cursor-pointer animate-shimmer font-urdu"
               >
-                <span className={selectedFontObj.fontClass}>{t.publishBtn}</span>
+                <span>{t.publishBtn}</span>
               </button>
             </form>
           </div>
 
           {/* Announcements List */}
           <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 space-y-4">
-            <h2 className={`text-xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.tabAnn}</h2>
+            <h2 className="text-xl font-bold text-slate-900 font-urdu">{t.tabAnn}</h2>
             {announcements.length === 0 ? (
               <div className="p-12 text-center text-slate-400 text-sm font-urdu">{t.noData}</div>
             ) : (
@@ -416,17 +411,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <div key={ann.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex justify-between items-start gap-4 hover-lift">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                        <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold font-urdu">
                           {ann.categoryUr}
                         </span>
                         {ann.isImportant && (
-                          <span className="text-[10px] bg-amber-400 text-emerald-950 px-2 py-0.5 rounded-full font-bold">
+                          <span className="text-[10px] bg-amber-400 text-emerald-950 px-2 py-0.5 rounded-full font-bold font-urdu">
                             اہم
                           </span>
                         )}
                         <span className="text-xs text-slate-400 font-mono" dir="ltr">{ann.date}</span>
                       </div>
-                      <h3 className={`font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{ann.titleUr}</h3>
+                      <h3 className="font-bold text-slate-900 font-urdu">{ann.titleUr}</h3>
                       <p className="text-xs text-slate-600 line-clamp-2 font-urdu">{ann.contentUr}</p>
                     </div>
                     <button
@@ -447,7 +442,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* Messages Tab */}
       {activeTab === 'messages' && (
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 space-y-4">
-          <h2 className={`text-xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.tabMsg}</h2>
+          <h2 className="text-xl font-bold text-slate-900 font-urdu">{t.tabMsg}</h2>
           {messages.length === 0 ? (
             <div className="p-12 text-center text-slate-400 text-sm font-urdu">{t.noData}</div>
           ) : (

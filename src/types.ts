@@ -1,15 +1,15 @@
 export type Language = 'ur' | 'en';
 
-export type CalligraphyFont = 
-  | 'nastaliq'      // Noto Nastaliq Urdu (خطِ نستعلیق)
-  | 'gulzar'        // Gulzar (خطِ گلزار)
-  | 'naskh'         // Amiri (خطِ نسخ)
-  | 'ruqaa'         // Aref Ruqaa (خطِ رقعہ)
-  | 'kufi'          // Reem Kufi (خطِ کوفی)
-  | 'lateef'        // Lateef (خطِ لطیف)
-  | 'scheherazade'  // Scheherazade New (خطِ شہرزاد)
-  | 'marhey'        // Marhey (خطِ مرح)
-  | 'qahiri';       // Qahiri (خطِ قاہری)
+export interface ScheduleDay {
+  id: string;
+  dayUr: string;
+  dayEn: string;
+  statusUr: string;
+  statusEn: string;
+  isHoliday: boolean;
+  timingsUr: string;
+  timingsEn: string;
+}
 
 export interface Program {
   id: string;
@@ -69,9 +69,11 @@ export interface GalleryItem {
   id: string;
   titleUr: string;
   titleEn: string;
-  category: 'mosque' | 'classes' | 'hifz' | 'events' | 'facilities';
-  imageUrl: string;
+  descUr: string;
+  descEn: string;
+  category: 'curriculum' | 'hifz' | 'events' | 'facilities';
   date: string;
+  iconName: string;
 }
 
 export interface Teacher {
@@ -82,5 +84,7 @@ export interface Teacher {
   roleEn: string;
   qualificationUr: string;
   qualificationEn: string;
-  imageUrl: string;
+  experienceUr: string;
+  experienceEn: string;
+  monogramUr: string;
 }

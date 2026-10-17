@@ -1,10 +1,83 @@
-import { Program, Announcement, GalleryItem, Teacher, AdmissionApplication } from '../types';
+import { Program, Announcement, GalleryItem, Teacher, AdmissionApplication, ScheduleDay } from '../types';
+
+export const WEEKLY_SCHEDULE: ScheduleDay[] = [
+  {
+    id: 'sat',
+    dayUr: 'ہفتہ',
+    dayEn: 'Saturday',
+    statusUr: 'تعلیم جاری',
+    statusEn: 'Classes Active',
+    isHoliday: false,
+    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
+    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+  },
+  {
+    id: 'sun',
+    dayUr: 'اتوار',
+    dayEn: 'Sunday',
+    statusUr: 'تعلیم جاری',
+    statusEn: 'Classes Active',
+    isHoliday: false,
+    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
+    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+  },
+  {
+    id: 'mon',
+    dayUr: 'پیر',
+    dayEn: 'Monday',
+    statusUr: 'تعلیم جاری',
+    statusEn: 'Classes Active',
+    isHoliday: false,
+    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
+    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+  },
+  {
+    id: 'tue',
+    dayUr: 'منگل',
+    dayEn: 'Tuesday',
+    statusUr: 'تعلیم جاری',
+    statusEn: 'Classes Active',
+    isHoliday: false,
+    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
+    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+  },
+  {
+    id: 'wed',
+    dayUr: 'بدھ',
+    dayEn: 'Wednesday',
+    statusUr: 'تعلیم جاری',
+    statusEn: 'Classes Active',
+    isHoliday: false,
+    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
+    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+  },
+  {
+    id: 'thu',
+    dayUr: 'جمعرات',
+    dayEn: 'Thursday',
+    statusUr: 'تعلیم جاری',
+    statusEn: 'Classes Active',
+    isHoliday: false,
+    timingsUr: 'صبح 7:00 تا دوپہر 12:30 / عصر تا مغرب',
+    timingsEn: '7:00 AM - 12:30 PM / Asr to Maghrib'
+  },
+  {
+    id: 'fri',
+    dayUr: 'جمعہ',
+    dayEn: 'Friday',
+    statusUr: 'ہفتہ وار چھٹی (جمعہ مبارک)',
+    statusEn: 'Weekly Holiday (Jummah Mubarak)',
+    isHoliday: true,
+    timingsUr: 'ہفتہ وار تعطیل — نمازِ جمعہ کا اہتمام',
+    timingsEn: 'Weekly Holiday — Congregational Jummah Prayer'
+  }
+];
 
 export const INITIAL_PROGRAMS: Program[] = [
   {
     id: 'hifz',
-    titleUr: 'حفظ القرآن الكريم',
-    titleEn: 'Hifz-ul-Quran',
+    titleUr: 'شعبہ حفظ القرآن الكريم',
+    titleEn: 'Hifz-ul-Quran Department',
     descUr: 'قرآن مجید کو حفظ کرنے کا انتہائی منظم اور معیاری شعبہ، جس میں تجوید و مخارج اور پختہ دہرائی پر خصوصی توجہ دی جاتی ہے۔',
     descEn: 'A structured and high-standard department for memorizing the Holy Quran with special focus on Tajweed, Makharij, and rigorous revision.',
     durationUr: '2.5 تا 3.5 سال',
@@ -15,14 +88,14 @@ export const INITIAL_PROGRAMS: Program[] = [
     timingsEn: '7:00 AM - 12:30 PM',
     iconName: 'BookOpen',
     featuresUr: [
-      'ماہر حفاظِ کرام کی نگرانی',
-      'روزانہ نیا سبق اور منزل کی پختگی',
-      'صحیح تلفظ اور قواعدِ تجوید کی تربیت',
+      'ماہر حفاظِ کرام کی خصوصی نگرانی',
+      'روزانہ نیا سبق، سبقی اور منزل کی پختگی',
+      'صحیح تلفظ اور قواعدِ تجوید کی عملی تربیت',
       'ماہانہ کارکردگی رپورٹس برائے والدین'
     ],
     featuresEn: [
       'Supervision by expert Huffaz',
-      'Daily new lesson and revision system',
+      'Daily Sabaq, Sabqi, and Manzil consolidation',
       'Proper pronunciation & Tajweed training',
       'Monthly performance reports for parents'
     ]
@@ -41,22 +114,22 @@ export const INITIAL_PROGRAMS: Program[] = [
     timingsEn: 'Asr to Maghrib / Morning shifts',
     iconName: 'Award',
     featuresUr: [
-      'نورانی قاعدہ سے آغاز',
-      'دستیاب کتب اور تختی کی مشق',
-      'نماز، مسنون دعائیں اور کلمے حفظ کروانا',
-      'خوشگوار اور حوصلہ افزا تعلیمی ماحول'
+      'نورانی قاعدہ سے آغاز اور بنیادی مخارج',
+      'تختی و تلفظ کی انفرادی مشق',
+      'نماز، مسنون دعائیں اور بنیادی کلمے حفظ کروانا',
+      'خوشگوار، حوصلہ افزا اور محفوظ تعلیمی ماحول'
     ],
     featuresEn: [
-      'Starting from Noorani Qaida',
-      'Writing and reading practice',
-      'Memorization of daily prayers & Masnoon Duas',
-      'Friendly and encouraging learning environment'
+      'Starting from Noorani Qaida and foundational Makharij',
+      'Individual pronunciation practice',
+      'Memorization of daily Salah and Masnoon Duas',
+      'Encouraging, safe, and positive atmosphere'
     ]
   },
   {
     id: 'deeniyat',
-    titleUr: 'مکتب کورس (دینیات)',
-    titleEn: 'Maktab Course (Deeniyat)',
+    titleUr: 'مکتب کورس (دینیات و اخلاقیات)',
+    titleEn: 'Maktab Course (Deeniyat & Ethics)',
     descUr: 'بنیادی اسلامی عقائد، نماز کا طریقہ، وضو، غسل، مسنون دعائیں، اور اخلاقی تربیت کا جامع کورس۔',
     descEn: 'Comprehensive course covering basic Islamic beliefs, method of Salah, ablution, Masnoon Duas, and moral upbringing.',
     durationUr: '1 سال',
@@ -67,42 +140,42 @@ export const INITIAL_PROGRAMS: Program[] = [
     timingsEn: '3:00 PM - 5:00 PM',
     iconName: 'Users',
     featuresUr: [
-      'فقہی بنیادی مسائل اور طہارت',
-      'سیرتِ طیبہ اور اخلاقیات کے اسباق',
-      'اردو خوشخطی اور اسلامی آداب',
-      'باقاعدہ کوئز اور انعامی مقابلے'
+      'فقہی بنیادی مسائل، طہارت اور وضو کی مشق',
+      'سیرتِ طیبہ اور اسلامی آداب و اخلاق',
+      'بنیادی احادیثِ مبارکہ کا حفظ',
+      'اخلاقی و تربیتی رہنما اسباق'
     ],
     featuresEn: [
-      'Basic Islamic jurisprudence & purity',
-      'Lessons on Seerah and Islamic ethics',
-      'Urdu calligraphy & Islamic etiquette',
-      'Regular quizzes and award ceremonies'
+      'Basic Islamic jurisprudence and purity practice',
+      'Lessons on Seerah and moral conduct',
+      'Memorization of short Hadiths',
+      'Character-building guidance'
     ]
   },
   {
     id: 'advanced_tajweed',
-    titleUr: 'تجوید و قراءت کورس',
-    titleEn: 'Advanced Tajweed & Qiraat',
-    descUr: 'صفت الحروف، مخارج کی باریکیوں اور خوش الحانی کے ساتھ تلاوت سیکھنے کے خواہشمند حضرات کے لیے۔',
-    descEn: 'For those wishing to master the fine rules of Sifat-ul-Huroof, Makharij precision, and melodious recitation.',
+    titleUr: 'تجوید و حسنِ قراءت کورس',
+    titleEn: 'Tajweed & Melodious Qiraat',
+    descUr: 'صفت الحروف، مخارج کی باریکیوں اور خوش الحانی کے ساتھ تلاوت سیکھنے کے خواہشمند طلباء کے لیے۔',
+    descEn: 'For students wishing to master the fine rules of Sifat-ul-Huroof, Makharij precision, and melodious recitation.',
     durationUr: '6 ماہ',
     durationEn: '6 Months',
-    ageUr: '12 سال سے زائد',
-    ageEn: 'Above 12 Years',
+    ageUr: '10 سال سے زائد',
+    ageEn: 'Above 10 Years',
     timingsUr: 'بعد از نمازِ مغرب',
     timingsEn: 'After Maghrib Prayer',
     iconName: 'Sparkles',
     featuresUr: [
-      'جزری اور تحفۃ الأطفال کی تدریس',
+      'قواعدِ تجوید اور مخارج کی تفصیلی تدریس',
       'غنہ، ادغام، اخفاء اور اظہار کی عملی مشق',
-      'صوت و الحان کی بنیادی تربیت',
-      'سندِ فراغت کا حصول'
+      'صوت و الحان کی باقاعدہ تربیت',
+      'کامیابی پر سندِ تجوید کا اجرا'
     ],
     featuresEn: [
-      'Teaching of Jazariyyah principles',
-      'Practical practice of Ghunnah, Idgham, Ikhfa',
-      'Basic voice and melodic training',
-      'Certificate upon completion'
+      'Detailed study of Tajweed rules and Makharij',
+      'Hands-on practice of Ghunnah, Idgham, and Ikhfa',
+      'Voice pitch and articulation training',
+      'Certificate upon successful completion'
     ]
   }
 ];
@@ -112,8 +185,8 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
     id: 'ann-1',
     titleUr: 'سالانہ داخلے برائے سال 2026ء کا آغاز',
     titleEn: 'Annual Admissions Open for 2026',
-    contentUr: 'مدرسہ تعلیم القرآن فریال مسجد میں شعبہ حفظ، ناظرہ اور مکتب دینیات کے لیے نئے داخلے شروع ہو چکے ہیں۔ والدین سے گزارش ہے کہ جلد از جلد آن لائن یا مدرسہ آفس تشریف لا کر داخلہ یقینی بنائیں۔ نشستیں محدود ہیں۔',
-    contentEn: 'New admissions for Hifz, Nazra, and Deeniyat departments have officially started at Madrasa Taleem-ul-Quran Faryal Masjid. Parents are requested to secure admissions early. Seats are limited.',
+    contentUr: 'مدرسہ تعلیم القرآن فریال مسجد میں شعبہ حفظ، ناظرہ اور مکتب دینیات کے لیے نئے داخلے شروع ہو چکے ہیں۔ والدین سے گزارش ہے کہ جلد از جلد آن لائن یا مدرسہ آفس تشریف لا کر داخلہ یقینی بنائیں۔ ہفتہ تا جمعرات کلاسز جاری رہتی ہیں۔',
+    contentEn: 'New admissions for Hifz, Nazra, and Deeniyat departments have officially started at Madrasa Taleem-ul-Quran Faryal Masjid. Classes run Saturday through Thursday. Friday is a weekly holiday.',
     categoryUr: 'داخلے',
     categoryEn: 'Admissions',
     date: '2026-10-01',
@@ -121,79 +194,93 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
   },
   {
     id: 'ann-2',
-    titleUr: 'محفلِ حسنِ قرات و دستار بندی',
-    titleEn: 'Annual Qiraat Gathering & Dastaarbandi',
-    contentUr: 'الحمدللہ رواں ماہ کے آخر میں مدرسہ تعلیم القرآن فریال مسجد میں سالانہ تقریبِ دستار بندی اور حسنِ قرات کا انعقاد کیا جائے گا۔ تمام اہل علاقہ اور والدین کو شرکت کی دعوت دی جاتی ہے۔',
-    contentEn: 'Alhamdulillah, the annual Qiraat gathering and Dastaarbandi ceremony will be held at Madrasa Taleem-ul-Quran Faryal Masjid later this month. All local residents and parents are cordially invited.',
-    categoryUr: 'تقاریب',
-    categoryEn: 'Events',
+    titleUr: 'ہفتہ وار تعلیمی شیڈول اور جمعہ کی تعطیل',
+    titleEn: 'Weekly Academic Schedule & Friday Holiday',
+    contentUr: 'مدرسے کے تمام طلباء اور والدین کو مطلع کیا جاتا ہے کہ تعلیم کا شیڈول ہفتہ تا جمعرات ہے۔ جمعہ کے دن ہفتہ وار تعطیل ہوتی ہے اور نمازِ جمعہ کا باجماعت اہتمام کیا جاتا ہے۔',
+    contentEn: 'All students and parents are notified that madrasa classes operate Saturday through Thursday. Friday is the designated weekly holiday with Jummah congregational prayer.',
+    categoryUr: 'شیڈول',
+    categoryEn: 'Schedule',
     date: '2026-10-10',
-    isImportant: false
+    isImportant: true
   },
   {
     id: 'ann-3',
-    titleUr: 'سرکاری تعطیل اور اسباق کی روٹین',
-    titleEn: 'Public Holiday & Class Schedule',
-    contentUr: 'آئندہ جمعہ کو خصوصی تعطیل ہوگی، جبکہ ہفتہ کے روز معمول کے مطابق کلاسز جاری رہیں گی۔ تمام طلباء کو وقت پر حاضری کی تاکید کی جاتی ہے۔',
-    contentEn: 'There will be a special holiday next Friday, while regular classes will resume as scheduled on Saturday. All students are reminded to attend on time.',
-    categoryUr: 'اطلاعیه',
-    categoryEn: 'Notice',
+    titleUr: 'ماہانہ کارکردگی و حفظ جائزہ ٹیسٹ',
+    titleEn: 'Monthly Academic Progress & Hifz Review',
+    contentUr: 'رواں ماہ کے اختتام پر شعبہ حفظ اور ناظرہ کے طلباء کا ماہانہ جائزہ ٹیسٹ منعقد ہوگا، جس کے نتائج والدین کے ساتھ شیئر کیے جائیں گے۔',
+    contentEn: 'Monthly evaluation and revision assessments will be conducted for Hifz and Nazra students at the end of this month, with progress reports shared with parents.',
+    categoryUr: 'امتحانات',
+    categoryEn: 'Examinations',
     date: '2026-10-14',
     isImportant: false
   }
 ];
 
+// Honest, authentic curriculum and facility showcases using clean Islamic architectural badges
 export const INITIAL_GALLERY: GalleryItem[] = [
   {
     id: 'gal-1',
-    titleUr: 'مرکزی نمازی ہال اور محراب — فریال مسجد',
-    titleEn: 'Main Prayer Hall & Mihrab — Faryal Masjid',
-    category: 'mosque',
-    imageUrl: 'https://images.unsplash.com/photo-1564769625393-d0ef116f082e?auto=format&fit=crop&q=80&w=1200',
-    date: '2026-01-15'
+    titleUr: 'شعبہ حفظ القرآن کی نشستیں',
+    titleEn: 'Hifz Department Study Circles',
+    descUr: 'قرآنِ مجید کی یاد دہانی اور روزانہ منزل دہرائی کے لیے مخصوص، پرسکون اور باوقار ماحول۔',
+    descEn: 'Dedicated, serene study circles for Quranic memorization and daily Manzil review.',
+    category: 'hifz',
+    iconName: 'BookOpen',
+    date: '1447 ھ / 2026ء'
   },
   {
     id: 'gal-2',
-    titleUr: 'شعبہ حفظ کے طلباء قرآن مجید کی دہرائی کرتے ہوئے',
-    titleEn: 'Hifz Students Revising the Holy Quran',
-    category: 'hifz',
-    imageUrl: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&q=80&w=1200',
-    date: '2026-02-10'
+    titleUr: 'ناظرہ و نورانی قاعدہ کلاس روم',
+    titleEn: 'Nazra & Noorani Qaida Learning Space',
+    descUr: 'بچوں کے لیے ہوا دار، روشن اور منظم تعلیمی ہال جہاں انفرادی توجہ کے ساتھ مخارج سکھائے جاتے ہیں۔',
+    descEn: 'Well-ventilated, illuminated classroom where children receive individualized phonetics attention.',
+    category: 'curriculum',
+    iconName: 'Award',
+    date: '1447 ھ / 2026ء'
   },
   {
     id: 'gal-3',
-    titleUr: 'ناظرہ اور نورانی قاعدہ کی کلاس کا منظر',
-    titleEn: 'Nazra and Noorani Qaida Class Session',
-    category: 'classes',
-    imageUrl: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&q=80&w=1200',
-    date: '2026-03-05'
+    titleUr: 'مرکزی نمازی ہال و صفوف',
+    titleEn: 'Main Prayer Hall & Gathering Space',
+    descUr: 'طلباء کو نمازِ باجماعت کی پابندی اور مسنون آداب کی عملی تربیت دینے کا مرکزی ہال۔',
+    descEn: 'The central hall where students practice congregational prayer and Sunnah etiquette daily.',
+    category: 'facilities',
+    iconName: 'Building',
+    date: '1447 ھ / 2026ء'
   },
   {
     id: 'gal-4',
-    titleUr: 'سالانہ تقسیمِ انعامات و دستار بندی تقریب',
-    titleEn: 'Annual Prize Distribution & Graduation Ceremony',
+    titleUr: 'سالانہ جائزہ و تقسیمِ اسناد',
+    titleEn: 'Annual Examinations & Certificate Awards',
+    descUr: 'حفظِ قرآن مکمل کرنے والے طلباء کی دستار بندی اور اسناد کی فراہمی کا باوقار اہتمام۔',
+    descEn: 'Ceremonial graduation and certificate conferment for students completing Quran memorization.',
     category: 'events',
-    imageUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&q=80&w=1200',
-    date: '2026-04-20'
+    iconName: 'GraduationCap',
+    date: '1447 ھ / 2026ء'
   },
   {
     id: 'gal-5',
-    titleUr: 'فریال مسجد کا خوبصورت بیرونی منظر اور مینار',
-    titleEn: 'Beautiful Exterior View and Minaret — Faryal Masjid',
-    category: 'mosque',
-    imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200',
-    date: '2026-05-12'
+    titleUr: 'اسلامی کتب خانہ و مطالعہ گاہ',
+    titleEn: 'Islamic Library & Reference Center',
+    descUr: 'تفاسیر، احادیثِ نبویہ اور دینی کتب پر مشتمل کتب خانہ جو اساتذہ اور طلباء کے استفادے کے لیے ہے۔',
+    descEn: 'Reference library containing Quranic commentaries and Hadith literature for scholars and students.',
+    category: 'facilities',
+    iconName: 'Library',
+    date: '1447 ھ / 2026ء'
   },
   {
     id: 'gal-6',
-    titleUr: 'لائبریری اور تعلیمی سہولیات',
-    titleEn: 'Library and Educational Facilities',
-    category: 'facilities',
-    imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=1200',
-    date: '2026-06-01'
+    titleUr: 'قواعدِ تجوید و صوتی مشقیں',
+    titleEn: 'Tajweed Rules & Phonetics Lab',
+    descUr: 'حروف کے درست صفات اور مخارج کی باریکیوں کی مشق کے لیے مخصوص تعلیمی نشست۔',
+    descEn: 'Specialized sessions focusing on phonetics precision and acoustic articulation of Quranic letters.',
+    category: 'curriculum',
+    iconName: 'Sparkles',
+    date: '1447 ھ / 2026ء'
   }
 ];
 
+// Dignified faculty details with authentic credentials and monograms (no fake stock photos)
 export const INITIAL_TEACHERS: Teacher[] = [
   {
     id: 't-1',
@@ -202,28 +289,34 @@ export const INITIAL_TEACHERS: Teacher[] = [
     roleUr: 'مہتمم و شیخ القراء',
     roleEn: 'Principal & Head Qari',
     qualificationUr: 'درسِ نظامی و قراءتِ سبعہ (جامعۃ العلوم الإسلامیہ)',
-    qualificationEn: 'Dars-e-Nizami & Qiraat-e-Sab‘ah Graduate',
-    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600'
+    qualificationEn: 'Dars-e-Nizami & Qiraat-e-Saba Graduate',
+    experienceUr: '15 سالہ تدریسی تجربہ',
+    experienceEn: '15+ Years Teaching Experience',
+    monogramUr: 'شیخ'
   },
   {
     id: 't-2',
     nameUr: 'مولانا عبداللہ فاروقی',
     nameEn: 'Maulana Abdullah Farooqi',
     roleUr: 'ناظمِ تعلیمات و استادِ شعبہ حفظ',
-    roleEn: 'Director of Studies & Hifz Teacher',
-    qualificationUr: 'حافظِ قرآن و عالمِ دین',
+    roleEn: 'Director of Studies & Hifz Mentor',
+    qualificationUr: 'حافظِ قرآن و عالمِ دین (وفاق المدارس العربیہ)',
     qualificationEn: 'Hafiz of Quran & Islamic Scholar',
-    imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600'
+    experienceUr: '10 سالہ شعبہ حفظ نگرانی',
+    experienceEn: '10+ Years Hifz Mentorship',
+    monogramUr: 'عالم'
   },
   {
     id: 't-3',
     nameUr: 'قاری زبیر احمد نقشبندی',
     nameEn: 'Qari Zubair Ahmed Naqshbandi',
-    roleUr: 'استادِ ناظرہ و تجوید',
-    roleEn: 'Nazra & Tajweed Instructor',
-    qualificationUr: 'تخصص في التجويد والقراءات',
+    roleUr: 'استادِ ناظرہ، نورانی قاعدہ و تجوید',
+    roleEn: 'Senior Nazra & Tajweed Instructor',
+    qualificationUr: 'تخصص فی التجوید والقراءات',
     qualificationEn: 'Specialization in Tajweed & Recitation',
-    imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600'
+    experienceUr: '8 سالہ ناظرہ و تجوید تدریس',
+    experienceEn: '8+ Years Phonetics Experience',
+    monogramUr: 'قاری'
   }
 ];
 
@@ -236,7 +329,7 @@ export const INITIAL_APPLICATIONS: AdmissionApplication[] = [
     programId: 'hifz',
     currentLevelUr: 'ناظرہ مکمل، قاعدہ پختہ',
     guardianPhone: '0300-1234567',
-    address: 'گلی نمبر 3، بلاک B، فریال ٹاؤن',
+    address: 'گلی نمبر 3، بلاک B، فریال ٹاؤن، کراچی',
     previousMadrasa: 'مکتبہ رحیمیہ',
     notes: 'بچہ صبح کے وقت حفظ کرنا چاہتا ہے۔',
     status: 'approved',
@@ -248,9 +341,9 @@ export const INITIAL_APPLICATIONS: AdmissionApplication[] = [
     fatherName: 'طارق محمود',
     age: '7',
     programId: 'nazra',
-    currentLevelUr: 'نورانی قاعدہ آخری پارے میں',
+    currentLevelUr: 'نورانی قاعدہ مکمل',
     guardianPhone: '0321-9876543',
-    address: 'مکان 45، نزد فریال مسجد',
+    address: 'مکان 45، نزد فریال مسجد، کراچی',
     notes: 'عصر کے بعد والی شفٹ میں داخلہ مطلوب ہے۔',
     status: 'pending',
     createdAt: '2026-10-12'

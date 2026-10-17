@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import { CalligraphyFont, Language, Program, AdmissionApplication } from '../types';
+import { Language, Program, AdmissionApplication } from '../types';
 import { BookOpen, ShieldCheck, CheckCircle2, User, Phone, MapPin, Calendar, AlertCircle, FileText, Check, Sparkles } from 'lucide-react';
-import { CALLIGRAPHY_FONTS } from '../components/CalligraphyFontPicker';
 
 interface AdmissionsProps {
   currentLang: Language;
   programs: Program[];
   onAddApplication: (app: AdmissionApplication) => void;
-  currentFont: CalligraphyFont;
 }
 
-export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, onAddApplication, currentFont }) => {
+export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, onAddApplication }) => {
   const isUrdu = currentLang === 'ur';
-  const selectedFontObj = CALLIGRAPHY_FONTS.find(f => f.id === currentFont) || CALLIGRAPHY_FONTS[0];
 
   const [studentName, setStudentName] = useState('');
   const [fatherName, setFatherName] = useState('');
@@ -50,7 +47,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
       privacyConsent: 'میں تصدیق کرتا/کرتی ہوں کہ فراہم کردہ تمام معلومات درست ہیں اور میں مدرسے کے قوانین کا پابند ہوں۔ *',
       submitBtn: 'داخلہ درخواست جمع کروائیں',
       successTitle: 'داخلہ درخواست کامیابی سے جمع ہو گئی ہے!',
-      successDesc: 'آپ کی درخواست مدرسہ انتظامیہ کو موصول ہو گئی ہے۔ آپ کا ایپلیکیشن آئی ڈی درج ذیل ہے۔ براہ کرم اسے محفوظ رکھیں۔',
+      successDesc: 'آپ کی درخواست مدرسہ تعلیم القرآن فریال مسجد انتظامیہ کو موصول ہو گئی ہے۔ آپ کا ایپلیکیشن آئی ڈی درج ذیل ہے۔ براہ کرم اسے محفوظ رکھیں۔',
       appIdLabel: 'ایپلیکیشن آئی ڈی:',
       submitAnother: 'ایک اور درخواست جمع کروائیں',
       fillRequired: 'براہ کرم تمام لازمی فیلڈز (ستارہ والے) پُر کریں اور رضامندی کے خانے پر نشان لگائیں۔'
@@ -76,7 +73,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
       privacyConsent: 'I confirm that the provided information is accurate and agree to abide by madrasa rules. *',
       submitBtn: 'Submit Admission Application',
       successTitle: 'Admission Application Submitted Successfully!',
-      successDesc: 'Your application has been received by the madrasa administration. Your application ID is below. Please save it for reference.',
+      successDesc: 'Your application has been received by Madrasa Taleem-ul-Quran Faryal Masjid administration. Your application ID is below. Please save it for reference.',
       appIdLabel: 'Application ID:',
       submitAnother: 'Submit Another Application',
       fillRequired: 'Please fill out all required fields marked with * and check the consent box.'
@@ -131,11 +128,11 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="bg-amber-100 text-amber-900 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm">
+        <span className="bg-amber-100 text-amber-900 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm font-urdu">
           <Sparkles className="w-3.5 h-3.5" />
           <span>{isUrdu ? 'داخلے 2026ء' : 'Admissions 2026'}</span>
         </span>
-        <h1 className={`text-3xl sm:text-5xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>
+        <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 font-urdu">
           {t.title}
         </h1>
         <p className="text-slate-600 text-sm sm:text-base font-urdu">
@@ -145,7 +142,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
       {/* Rules Grid with Hover Lift */}
       <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl p-8 border border-emerald-200 space-y-4 shadow-sm hover-lift">
-        <h2 className={`text-xl font-bold text-emerald-900 flex items-center gap-2 ${selectedFontObj.fontClass}`}>
+        <h2 className="text-xl font-bold text-emerald-900 flex items-center gap-2 font-urdu">
           <ShieldCheck className="w-6 h-6 text-emerald-700 animate-bounce-subtle" />
           <span>{t.rulesTitle}</span>
         </h2>
@@ -176,19 +173,19 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
             <Check className="w-10 h-10" />
           </div>
           <div className="space-y-2">
-            <h3 className={`text-2xl sm:text-3xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.successTitle}</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 font-urdu">{t.successTitle}</h3>
             <p className="text-sm text-slate-600 font-urdu">{t.successDesc}</p>
           </div>
           <div className="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-300 inline-block">
-            <p className="text-xs text-emerald-800 font-bold">{t.appIdLabel}</p>
+            <p className="text-xs text-emerald-800 font-bold font-urdu">{t.appIdLabel}</p>
             <p className="text-3xl font-mono font-bold text-emerald-950 tracking-widest mt-1" dir="ltr">{submittedAppId}</p>
           </div>
           <div>
             <button
               onClick={handleReset}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3.5 rounded-2xl font-bold text-sm shadow-xl transition-all cursor-pointer hover:scale-105"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3.5 rounded-2xl font-bold text-sm shadow-xl transition-all cursor-pointer hover:scale-105 font-urdu"
             >
-              <span className={selectedFontObj.fontClass}>{t.submitAnother}</span>
+              <span>{t.submitAnother}</span>
             </button>
           </div>
         </div>
@@ -197,7 +194,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
         <div className="bg-white rounded-3xl shadow-xl border border-emerald-100 p-8 sm:p-12 max-w-3xl mx-auto hover-lift">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="border-b border-slate-100 pb-4 mb-6">
-              <h2 className={`text-2xl font-bold text-slate-900 flex items-center gap-2 ${selectedFontObj.fontClass}`}>
+              <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 font-urdu">
                 <FileText className="w-6 h-6 text-emerald-700" />
                 <span>{t.formTitle}</span>
               </h2>
@@ -214,7 +211,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
               
               {/* Student Name */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.studentName}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.studentName}</label>
                 <input
                   type="text"
                   required
@@ -227,7 +224,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
               {/* Father Name */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.fatherName}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.fatherName}</label>
                 <input
                   type="text"
                   required
@@ -240,7 +237,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
               {/* Age */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.age}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.age}</label>
                 <input
                   type="number"
                   required
@@ -255,7 +252,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
               {/* Program Selection */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.programSelect}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.programSelect}</label>
                 <select
                   value={programId}
                   onChange={(e) => setProgramId(e.target.value)}
@@ -271,7 +268,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
               {/* Current Quran Level */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.currentLevel}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.currentLevel}</label>
                 <input
                   type="text"
                   value={currentLevelUr}
@@ -283,7 +280,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
               {/* Guardian Phone */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.guardianPhone}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.guardianPhone}</label>
                 <input
                   type="text"
                   required
@@ -299,7 +296,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
             {/* Address */}
             <div className="space-y-2">
-              <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.address}</label>
+              <label className="text-xs font-bold text-slate-700 font-urdu">{t.address}</label>
               <textarea
                 required
                 rows={2}
@@ -313,7 +310,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Previous Madrasa */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.prevMadrasa}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.prevMadrasa}</label>
                 <input
                   type="text"
                   value={previousMadrasa}
@@ -325,7 +322,7 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
 
               {/* Notes */}
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.notes}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.notes}</label>
                 <input
                   type="text"
                   value={notes}
@@ -355,9 +352,9 @@ export const Admissions: React.FC<AdmissionsProps> = ({ currentLang, programs, o
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-emerald-700/25 transition-all cursor-pointer animate-shimmer hover:scale-[1.01] active:scale-95"
+                className="w-full bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-emerald-700/25 transition-all cursor-pointer animate-shimmer hover:scale-[1.01] active:scale-95 font-urdu"
               >
-                <span className={`text-base ${selectedFontObj.fontClass}`}>{t.submitBtn}</span>
+                <span className="text-base">{t.submitBtn}</span>
               </button>
             </div>
 

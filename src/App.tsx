@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { CalligraphyFont, Language, AdmissionApplication, Announcement, ContactMessage } from './types';
+import { Language, AdmissionApplication, Announcement, ContactMessage } from './types';
 import { INITIAL_PROGRAMS, INITIAL_ANNOUNCEMENTS, INITIAL_GALLERY, INITIAL_TEACHERS, INITIAL_APPLICATIONS } from './data/initialData';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { CalligraphyFontPicker } from './components/CalligraphyFontPicker';
 import { Home } from './pages/Home';
 import { About } from './pages/About';
 import { Programs } from './pages/Programs';
@@ -12,16 +11,11 @@ import { Gallery } from './pages/Gallery';
 import { Announcements } from './pages/Announcements';
 import { Contact } from './pages/Contact';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { WeeklySchedule } from './components/WeeklySchedule';
 
 export default function App() {
   const [currentLang, setLang] = useState<Language>('ur');
   const [activeTab, setActiveTab] = useState<string>('home');
-  
-  // Calligraphy Font with localStorage persistence
-  const [currentFont, setFont] = useState<CalligraphyFont>(() => {
-    const saved = localStorage.getItem('tmq_calligraphy_font');
-    return (saved as CalligraphyFont) || 'nastaliq';
-  });
 
   // State with localStorage persistence
   const [programs] = useState(INITIAL_PROGRAMS);
@@ -29,23 +23,31 @@ export default function App() {
   const [gallery] = useState(INITIAL_GALLERY);
 
   const [announcements, setAnnouncements] = useState<Announcement[]>(() => {
-    const saved = localStorage.getItem('tmq_announcements');
-    return saved ? JSON.parse(saved) : INITIAL_ANNOUNCEMENTS;
+    try {
+      const saved = localStorage.getItem('tmq_announcements');
+      return saved ? JSON.parse(saved) : INITIAL_ANNOUNCEMENTS;
+    } catch {
+      return INITIAL_ANNOUNCEMENTS;
+    }
   });
 
   const [applications, setApplications] = useState<AdmissionApplication[]>(() => {
-    const saved = localStorage.getItem('tmq_applications');
-    return saved ? JSON.parse(saved) : INITIAL_APPLICATIONS;
+    try {
+      const saved = localStorage.getItem('tmq_applications');
+      return saved ? JSON.parse(saved) : INITIAL_APPLICATIONS;
+    } catch {
+      return INITIAL_APPLICATIONS;
+    }
   });
 
   const [messages, setMessages] = useState<ContactMessage[]>(() => {
-    const saved = localStorage.getItem('tmq_messages');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('tmq_messages');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
-
-  useEffect(() => {
-    localStorage.setItem('tmq_calligraphy_font', currentFont);
-  }, [currentFont]);
 
   useEffect(() => {
     localStorage.setItem('tmq_announcements', JSON.stringify(announcements));
@@ -68,7 +70,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans relative">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans relative selection:bg-emerald-600 selection:text-white">
       
       {/* Navigation Header */}
       <Navbar
@@ -76,8 +78,6 @@ export default function App() {
         setLang={setLang}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        currentFont={currentFont}
-        setFont={setFont}
       />
 
       {/* Main Content Router */}
@@ -89,15 +89,12 @@ export default function App() {
             programs={programs}
             announcements={announcements}
             gallery={gallery}
-            currentFont={currentFont}
-            setFont={setFont}
           />
         )}
         {activeTab === 'about' && (
           <About
             currentLang={currentLang}
             teachers={teachers}
-            currentFont={currentFont}
           />
         )}
         {activeTab === 'programs' && (
@@ -105,36 +102,36 @@ export default function App() {
             currentLang={currentLang}
             programs={programs}
             setActiveTab={setActiveTab}
-            currentFont={currentFont}
           />
+        )}
+        {activeTab === 'schedule' && (
+          <div className="py-8">
+            <WeeklySchedule currentLang={currentLang} />
+          </div>
         )}
         {activeTab === 'admissions' && (
           <Admissions
             currentLang={currentLang}
             programs={programs}
             onAddApplication={handleAddApplication}
-            currentFont={currentFont}
           />
         )}
         {activeTab === 'gallery' && (
           <Gallery
             currentLang={currentLang}
             gallery={gallery}
-            currentFont={currentFont}
           />
         )}
         {activeTab === 'announcements' && (
           <Announcements
             currentLang={currentLang}
             announcements={announcements}
-            currentFont={currentFont}
           />
         )}
         {activeTab === 'contact' && (
           <Contact
             currentLang={currentLang}
             onAddMessage={handleAddMessage}
-            currentFont={currentFont}
           />
         )}
         {activeTab === 'admin' && (
@@ -146,23 +143,14 @@ export default function App() {
             setAnnouncements={setAnnouncements}
             messages={messages}
             setMessages={setMessages}
-            currentFont={currentFont}
           />
         )}
       </main>
-
-      {/* Calligraphy Font Picker Floating Widget */}
-      <CalligraphyFontPicker
-        currentFont={currentFont}
-        setFont={setFont}
-        currentLang={currentLang}
-      />
 
       {/* Footer */}
       <Footer
         currentLang={currentLang}
         setActiveTab={setActiveTab}
-        currentFont={currentFont}
       />
 
     </div>

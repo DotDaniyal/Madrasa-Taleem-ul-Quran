@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalligraphyFont, Language } from '../types';
+import { Language } from '../types';
 import { 
   BookOpen, 
   Phone, 
@@ -13,75 +13,59 @@ import {
   GraduationCap, 
   Image as ImageIcon, 
   Bell, 
-  MessageSquare,
+  MessageSquare, 
   Lock,
-  Sparkles,
-  ChevronDown
+  Clock,
+  Sparkles
 } from 'lucide-react';
-import { CALLIGRAPHY_FONTS } from './CalligraphyFontPicker';
 
 interface NavbarProps {
   currentLang: Language;
   setLang: (lang: Language) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  currentFont: CalligraphyFont;
-  setFont: (font: CalligraphyFont) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   currentLang, 
   setLang, 
   activeTab, 
-  setActiveTab,
-  currentFont,
-  setFont
+  setActiveTab
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [fontMenuOpen, setFontMenuOpen] = useState(false);
   const isUrdu = currentLang === 'ur';
-
-  const selectedFontObj = CALLIGRAPHY_FONTS.find(f => f.id === currentFont) || CALLIGRAPHY_FONTS[0];
 
   const t = {
     ur: {
       title: 'مدرسہ تعلیم القرآن فریال مسجد',
-      subtitle: 'حفظ و ناظرہ و تجوید',
-      announcementsList: [
-        'داخلے جاری ہیں برائے سال 2026ء — شعبہ حفظ، ناظرہ اور مکتب دینیات میں محدود نشستیں دستیاب ہیں!',
-        'محفلِ حسنِ قرات و سالانہ دستار بندی تقریب رواں ماہ کے اختتام پر منعقد ہوگی۔',
-        'مدرسہ میں کمپیوٹرائزڈ حاضری اور ہفتہ وار حفظ دہرائی کا منظم نظام فعال ہے۔'
-      ],
+      subtitle: 'حفظ و ناظرہ و تجوید القرآن',
+      scheduleNotice: 'تعلیمی شیڈول: ہفتہ تا جمعرات کلاسز جاری | جمعہ: ہفتہ وار تعطیل (جمعہ مبارک)',
       home: 'ہوم',
       about: 'تعارف',
       programs: 'پروگرامز',
+      schedule: 'اوقات و شیڈول',
       admissions: 'داخلہ',
-      gallery: 'گیلری',
+      gallery: 'شعبہ جات',
       announcements: 'اعلانات',
       contact: 'رابطہ',
       admin: 'انتظامیہ',
       applyNow: 'آن لائن داخلہ فارم',
-      changeFont: 'خطاطی فونٹ',
       contactUs: 'رابطہ'
     },
     en: {
       title: 'Madrasa Taleem-ul-Quran Faryal Masjid',
-      subtitle: 'Quranic Education & Hifz',
-      announcementsList: [
-        'Admissions Open for 2026 — Limited seats in Hifz, Nazra, and Deeniyat departments!',
-        'Annual Qiraat gathering & Dastaarbandi ceremony will be held later this month.',
-        'High standard Tajweed, revision monitoring, and moral training system.'
-      ],
+      subtitle: 'Quran Memorization, Recitation & Tajweed',
+      scheduleNotice: 'Academic Schedule: Sat - Thu Classes | Friday: Weekly Holiday (Jummah)',
       home: 'Home',
       about: 'About',
       programs: 'Programs',
+      schedule: 'Schedule',
       admissions: 'Admissions',
-      gallery: 'Gallery',
+      gallery: 'Departments',
       announcements: 'Announcements',
       contact: 'Contact',
       admin: 'Admin',
       applyNow: 'Apply Now',
-      changeFont: 'Calligraphy',
       contactUs: 'Contact'
     }
   }[currentLang];
@@ -90,6 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'home', label: t.home, icon: Home },
     { id: 'about', label: t.about, icon: Info },
     { id: 'programs', label: t.programs, icon: GraduationCap },
+    { id: 'schedule', label: t.schedule, icon: Clock },
     { id: 'admissions', label: t.admissions, icon: ShieldCheck },
     { id: 'gallery', label: t.gallery, icon: ImageIcon },
     { id: 'announcements', label: t.announcements, icon: Bell },
@@ -106,81 +91,28 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-50 shadow-md">
       
-      {/* Top Animated Announcement Ticker */}
-      <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-emerald-100 text-xs py-2 px-4 overflow-hidden border-b border-emerald-800">
+      {/* Top Banner with Schedule and Verified Contact */}
+      <div className="bg-emerald-950 text-emerald-100 text-xs py-2 px-4 border-b border-emerald-900">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
           
-          {/* Marquee Container */}
-          <div className="flex items-center gap-3 w-full md:w-3/4 overflow-hidden">
-            <span className="shrink-0 bg-amber-500 text-emerald-950 text-[10px] px-2.5 py-0.5 rounded-full font-bold shadow-sm animate-pulse flex items-center gap-1">
-              <Sparkles className="w-3 h-3 animate-spin-slow" />
-              <span>{isUrdu ? 'اعلانات' : 'Notices'}</span>
+          {/* Confirmed Schedule Notice */}
+          <div className="flex items-center gap-2.5 text-center sm:text-right">
+            <span className="bg-amber-500 text-emerald-950 text-[10px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 shrink-0">
+              <Clock className="w-3 h-3" />
+              <span>{isUrdu ? 'اوقات' : 'Schedule'}</span>
             </span>
-
-            {/* Seamless Animated Marquee Text */}
-            <div className="overflow-hidden whitespace-nowrap relative w-full">
-              <div className={isUrdu ? "animate-marquee-rtl flex gap-10" : "animate-marquee flex gap-10"}>
-                {t.announcementsList.map((ann, idx) => (
-                  <span key={idx} className="inline-flex items-center gap-2 font-medium">
-                    <span className="text-amber-400">✦</span>
-                    <span className={selectedFontObj.fontClass}>{ann}</span>
-                  </span>
-                ))}
-                {/* Duplicate for seamless infinite loop */}
-                {t.announcementsList.map((ann, idx) => (
-                  <span key={`dup-${idx}`} className="inline-flex items-center gap-2 font-medium">
-                    <span className="text-amber-400">✦</span>
-                    <span className={selectedFontObj.fontClass}>{ann}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
+            <span className="font-medium font-urdu leading-normal">
+              {t.scheduleNotice}
+            </span>
           </div>
 
-          {/* Quick Actions (Calligraphy Dropdown, Call, Language Switcher) */}
-          <div className="flex items-center gap-3 text-xs shrink-0 pt-1 md:pt-0">
-            
-            {/* Quick Calligraphy Script Switcher */}
-            <div className="relative">
-              <button
-                onClick={() => setFontMenuOpen(!fontMenuOpen)}
-                className="flex items-center gap-1 bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-600/40 transition-colors font-medium cursor-pointer"
-                title="خطاطی تبدیل کریں"
-              >
-                <span>✒️</span>
-                <span className="text-[11px] font-bold">{selectedFontObj.nameUr.split(' ')[0]}</span>
-                <ChevronDown className="w-3 h-3 text-emerald-300" />
-              </button>
-
-              {fontMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white text-slate-800 rounded-2xl shadow-2xl border border-emerald-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-3 py-1.5 border-b border-slate-100 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                    {isUrdu ? 'خطاطی کا انداز منتخب کریں' : 'Choose Calligraphy Script'}
-                  </div>
-                  <div className="max-h-60 overflow-y-auto py-1">
-                    {CALLIGRAPHY_FONTS.map((f) => (
-                      <button
-                        key={f.id}
-                        onClick={() => { setFont(f.id); setFontMenuOpen(false); }}
-                        className={`w-full text-right px-3 py-2 text-xs flex items-center justify-between hover:bg-emerald-50 cursor-pointer ${
-                          currentFont === f.id ? 'bg-emerald-50 text-emerald-800 font-bold' : 'text-slate-700'
-                        }`}
-                      >
-                        <span className={f.fontClass}>{f.nameUr}</span>
-                        {currentFont === f.id && <span className="text-emerald-600">✓</span>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Direct Call Link */}
+          {/* Quick Actions (Call & Language Switcher) */}
+          <div className="flex items-center gap-4 text-xs shrink-0 pt-1 md:pt-0">
             <a 
               href="tel:+923001234567" 
-              className="flex items-center gap-1 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
-              <Phone className="w-3.5 h-3.5 text-amber-400 animate-bounce-subtle" />
+              <Phone className="w-3.5 h-3.5 text-amber-400" />
               <span dir="ltr" className="font-mono">+92 300 1234567</span>
             </a>
 
@@ -192,7 +124,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 document.documentElement.dir = nextLang === 'ur' ? 'rtl' : 'ltr'; 
                 document.documentElement.lang = nextLang; 
               }}
-              className="flex items-center gap-1 bg-amber-400 hover:bg-amber-300 text-emerald-950 px-2.5 py-1 rounded-lg transition-colors font-bold cursor-pointer shadow-sm hover:scale-105 transition-transform"
+              className="flex items-center gap-1 bg-emerald-800 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg transition-colors font-bold cursor-pointer border border-emerald-700"
             >
               <Globe className="w-3.5 h-3.5" />
               <span>{currentLang === 'ur' ? 'English' : 'اردو'}</span>
@@ -203,33 +135,25 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Main Navigation Bar */}
-      <nav className="bg-white/95 backdrop-blur-md border-b border-emerald-100 relative">
+      <nav className="bg-white/95 backdrop-blur-md border-b border-emerald-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             
-            {/* Brand Logo and Calligraphic Identity */}
+            {/* Brand Official Identity & Logo (Preserved) */}
             <div 
               onClick={() => handleNavClick('home')}
               className="flex items-center gap-3.5 cursor-pointer group"
             >
-              <div className="relative">
-                <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 flex items-center justify-center text-white shadow-lg shadow-emerald-700/25 group-hover:scale-110 transition-transform duration-300 animate-pulse-glow">
-                  <BookOpen className="w-7 h-7 text-amber-300 animate-float" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-bold text-emerald-950">
-                  ✦
-                </div>
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-900 flex items-center justify-center text-white shadow-md shadow-emerald-900/20 group-hover:scale-105 transition-transform duration-300">
+                <BookOpen className="w-6 h-6 text-amber-300" />
               </div>
 
               <div>
-                <h1 className={`text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors leading-tight ${selectedFontObj.fontClass}`}>
+                <h1 className="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-emerald-800 transition-colors leading-tight font-urdu">
                   {t.title}
                 </h1>
-                <p className="text-xs text-emerald-700 font-semibold tracking-wide flex items-center gap-1">
-                  <span>{t.subtitle}</span>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-sans">
-                    {selectedFontObj.nameUr.split(' ')[0]}
-                  </span>
+                <p className="text-xs text-emerald-700 font-medium">
+                  {t.subtitle}
                 </p>
               </div>
             </div>
@@ -243,28 +167,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                       isActive 
-                        ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/20 font-bold' 
-                        : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/70'
+                        ? 'bg-emerald-800 text-white shadow-sm font-bold' 
+                        : 'text-slate-600 hover:text-emerald-800 hover:bg-emerald-50'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300 animate-bounce-subtle' : 'text-slate-400'}`} />
-                    <span className={selectedFontObj.fontClass}>{item.label}</span>
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-400'}`} />
+                    <span className="font-urdu">{item.label}</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Action Buttons (Apply Now with Shimmer Effect) */}
+            {/* Action Buttons (Apply Now) */}
             <div className="hidden sm:flex items-center gap-3">
               <button
                 onClick={() => handleNavClick('admissions')}
-                className="relative overflow-hidden bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 hover:from-emerald-600 hover:to-teal-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-emerald-700/25 transition-all flex items-center gap-2 cursor-pointer animate-shimmer hover:scale-105 active:scale-95"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95"
               >
                 <Calendar className="w-4 h-4 text-amber-300" />
-                <span className={selectedFontObj.fontClass}>{t.applyNow}</span>
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                <span className="font-urdu">{t.applyNow}</span>
               </button>
             </div>
 
@@ -272,7 +195,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex lg:hidden items-center gap-2">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2.5 rounded-xl text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 transition-colors cursor-pointer"
+                className="p-2.5 rounded-xl text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors cursor-pointer"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -284,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Dropdown Navigation */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-slate-100 px-4 pt-3 pb-6 space-y-2 shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <div className="lg:hidden bg-white border-t border-slate-100 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-150">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -292,14 +215,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                     isActive 
-                      ? 'bg-emerald-700 text-white font-bold shadow-md' 
+                      ? 'bg-emerald-800 text-white font-bold shadow-sm' 
                       : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-800'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-amber-300' : 'text-slate-400'}`} />
-                  <span className={selectedFontObj.fontClass}>{item.label}</span>
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-400'}`} />
+                  <span className="font-urdu">{item.label}</span>
                 </button>
               );
             })}
@@ -307,10 +230,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
               <button
                 onClick={() => handleNavClick('admissions')}
-                className="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-bold shadow-md flex items-center justify-center gap-2 animate-shimmer"
+                className="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-bold shadow-sm flex items-center justify-center gap-2"
               >
-                <Calendar className="w-5 h-5 text-amber-300" />
-                <span className={selectedFontObj.fontClass}>{t.applyNow}</span>
+                <Calendar className="w-4 h-4 text-amber-300" />
+                <span className="font-urdu">{t.applyNow}</span>
               </button>
             </div>
           </div>

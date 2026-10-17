@@ -1,17 +1,14 @@
 import React from 'react';
-import { CalligraphyFont, Language, Announcement } from '../types';
+import { Language, Announcement } from '../types';
 import { Bell, Calendar, Sparkles, AlertCircle } from 'lucide-react';
-import { CALLIGRAPHY_FONTS } from '../components/CalligraphyFontPicker';
 
 interface AnnouncementsProps {
   currentLang: Language;
   announcements: Announcement[];
-  currentFont: CalligraphyFont;
 }
 
-export const Announcements: React.FC<AnnouncementsProps> = ({ currentLang, announcements, currentFont }) => {
+export const Announcements: React.FC<AnnouncementsProps> = ({ currentLang, announcements }) => {
   const isUrdu = currentLang === 'ur';
-  const selectedFontObj = CALLIGRAPHY_FONTS.find(f => f.id === currentFont) || CALLIGRAPHY_FONTS[0];
 
   const t = {
     ur: {
@@ -33,11 +30,11 @@ export const Announcements: React.FC<AnnouncementsProps> = ({ currentLang, annou
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="bg-amber-100 text-amber-900 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm">
+        <span className="bg-amber-100 text-amber-900 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm font-urdu">
           <Sparkles className="w-3.5 h-3.5" />
           <span>{isUrdu ? 'نوٹس بورڈ' : 'Notice Board'}</span>
         </span>
-        <h1 className={`text-3xl sm:text-5xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>
+        <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 font-urdu">
           {t.title}
         </h1>
         <p className="text-slate-600 text-sm sm:text-base font-urdu">
@@ -56,7 +53,7 @@ export const Announcements: React.FC<AnnouncementsProps> = ({ currentLang, annou
           >
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div className="flex items-center gap-2">
-                <span className={`text-xs px-3.5 py-1 rounded-full font-bold shadow-sm ${
+                <span className={`text-xs px-3.5 py-1 rounded-full font-bold shadow-sm font-urdu ${
                   ann.isImportant ? 'bg-amber-500 text-emerald-950 font-bold' : 'bg-emerald-100 text-emerald-800'
                 }`}>
                   {isUrdu ? ann.categoryUr : ann.categoryEn}
@@ -74,7 +71,7 @@ export const Announcements: React.FC<AnnouncementsProps> = ({ currentLang, annou
               </div>
             </div>
 
-            <h2 className={`text-2xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>
+            <h2 className="text-2xl font-bold text-slate-900 font-urdu">
               {isUrdu ? ann.titleUr : ann.titleEn}
             </h2>
 

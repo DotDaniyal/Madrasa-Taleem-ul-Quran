@@ -2,14 +2,15 @@
 
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', 'Noto Nastaliq Urdu', sans-serif;
+    font-family: 'Inter', 'Plus Jakarta Sans', 'Noto Nastaliq Urdu', sans-serif;
   }
 }
 
-/* Calligraphy & Unicode Urdu/Arabic Font Family Classes */
+/* Professional Typography System: Urdu, Arabic, and Quranic Text */
 .font-urdu,
 .font-nastaliq {
   font-family: 'Noto Nastaliq Urdu', serif;
+  line-height: 1.8;
 }
 
 .font-gulzar {

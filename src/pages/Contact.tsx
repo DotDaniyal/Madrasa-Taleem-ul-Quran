@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { CalligraphyFont, Language, ContactMessage } from '../types';
+import { Language, ContactMessage } from '../types';
 import { Phone, Mail, MapPin, MessageCircle, Clock, Send, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
-import { CALLIGRAPHY_FONTS } from '../components/CalligraphyFontPicker';
 
 interface ContactProps {
   currentLang: Language;
   onAddMessage: (msg: ContactMessage) => void;
-  currentFont: CalligraphyFont;
 }
 
-export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, currentFont }) => {
+export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage }) => {
   const isUrdu = currentLang === 'ur';
-  const selectedFontObj = CALLIGRAPHY_FONTS.find(f => f.id === currentFont) || CALLIGRAPHY_FONTS[0];
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -26,13 +23,13 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
       subtitle: 'مدرسہ تعلیم القرآن فریال مسجد سے رابطہ کے لیے معلومات اور فارم',
       contactInfo: 'رابطے کی معلومات',
       addressTitle: 'مدرسہ و مسجد کا پتہ',
-      addressVal: 'مدرسہ تعلیم القرآن فریال مسجد، مین روڈ، بلاک B، کراچی، پاکستان',
+      addressVal: 'مدرسہ تعلیم القرآن فریال مسجد، کراچی، پاکستان',
       phoneTitle: 'فون نمبر / واٹس ایپ',
       phoneVal: '+92 300 1234567',
       emailTitle: 'ای میل ایڈریس',
       emailVal: 'info@faryalmadrasa.edu.pk',
       hoursTitle: 'اوقاتِ کار',
-      hoursVal: 'پیر تا ہفتہ: صبح 7:00 بجے تا مغرب',
+      hoursVal: 'ہفتہ تا جمعرات: صبح 7:00 بجے تا مغرب (جمعہ تعطیل)',
       formTitle: 'ہمیں پیغام بھیجیں',
       nameLabel: 'آپ کا نام *',
       phoneLabel: 'موبائل نمبر *',
@@ -48,13 +45,13 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
       subtitle: 'Get in touch with Madrasa Taleem-ul-Quran Faryal Masjid',
       contactInfo: 'Contact Information',
       addressTitle: 'Address',
-      addressVal: 'Madrasa Taleem-ul-Quran Faryal Masjid, Main Road, Block B, Karachi, Pakistan',
+      addressVal: 'Madrasa Taleem-ul-Quran Faryal Masjid, Karachi, Pakistan',
       phoneTitle: 'Phone / WhatsApp',
       phoneVal: '+92 300 1234567',
       emailTitle: 'Email Address',
       emailVal: 'info@faryalmadrasa.edu.pk',
       hoursTitle: 'Working Hours',
-      hoursVal: 'Monday - Saturday: 7:00 AM - Maghrib',
+      hoursVal: 'Saturday to Thursday: 7:00 AM - Maghrib (Friday Holiday)',
       formTitle: 'Send Us a Message',
       nameLabel: 'Your Name *',
       phoneLabel: 'Mobile Number *',
@@ -98,11 +95,11 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="bg-emerald-100 text-emerald-800 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm">
-          <Sparkles className="w-3.5 h-3.5" />
+        <span className="bg-emerald-100 text-emerald-800 text-xs px-3.5 py-1 rounded-full font-bold inline-flex items-center gap-1.5 shadow-sm font-urdu">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
           <span>{isUrdu ? 'رابطہ' : 'Contact'}</span>
         </span>
-        <h1 className={`text-3xl sm:text-5xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>
+        <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 font-urdu">
           {t.title}
         </h1>
         <p className="text-slate-600 text-sm sm:text-base font-urdu">
@@ -115,7 +112,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
         {/* Contact Information Cards */}
         <div className="space-y-6">
           <div className="bg-white p-7 rounded-3xl shadow-sm border border-slate-100 space-y-6 hover-lift">
-            <h2 className={`text-xl font-bold text-slate-900 border-b border-slate-100 pb-3 ${selectedFontObj.fontClass}`}>
+            <h2 className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3 font-urdu">
               {t.contactInfo}
             </h2>
 
@@ -125,7 +122,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
                   <MapPin className="w-5 h-5 animate-bounce-subtle" />
                 </div>
                 <div>
-                  <p className={`font-bold text-slate-800 ${selectedFontObj.fontClass}`}>{t.addressTitle}</p>
+                  <p className="font-bold text-slate-800 font-urdu">{t.addressTitle}</p>
                   <p className="text-slate-600 text-xs mt-0.5 font-urdu">{t.addressVal}</p>
                 </div>
               </div>
@@ -135,7 +132,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
                   <Phone className="w-5 h-5 animate-bounce-subtle" />
                 </div>
                 <div>
-                  <p className={`font-bold text-slate-800 ${selectedFontObj.fontClass}`}>{t.phoneTitle}</p>
+                  <p className="font-bold text-slate-800 font-urdu">{t.phoneTitle}</p>
                   <p className="text-slate-600 text-xs mt-0.5 font-mono" dir="ltr">{t.phoneVal}</p>
                 </div>
               </div>
@@ -145,7 +142,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
                   <Mail className="w-5 h-5 animate-bounce-subtle" />
                 </div>
                 <div>
-                  <p className={`font-bold text-slate-800 ${selectedFontObj.fontClass}`}>{t.emailTitle}</p>
+                  <p className="font-bold text-slate-800 font-urdu">{t.emailTitle}</p>
                   <p className="text-slate-600 text-xs mt-0.5 font-mono">{t.emailVal}</p>
                 </div>
               </div>
@@ -155,7 +152,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
                   <Clock className="w-5 h-5 animate-bounce-subtle" />
                 </div>
                 <div>
-                  <p className={`font-bold text-slate-800 ${selectedFontObj.fontClass}`}>{t.hoursTitle}</p>
+                  <p className="font-bold text-slate-800 font-urdu">{t.hoursTitle}</p>
                   <p className="text-slate-600 text-xs mt-0.5 font-urdu">{t.hoursVal}</p>
                 </div>
               </div>
@@ -166,10 +163,10 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
                 href="https://wa.me/923001234567"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white py-4 rounded-2xl font-bold text-sm shadow-xl transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95 animate-shimmer"
+                className="w-full bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white py-4 rounded-2xl font-bold text-sm shadow-xl transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95 animate-shimmer font-urdu"
               >
                 <MessageCircle className="w-5 h-5 text-amber-300" />
-                <span className={selectedFontObj.fontClass}>{t.whatsappChat}</span>
+                <span>{t.whatsappChat}</span>
               </a>
             </div>
           </div>
@@ -182,17 +179,17 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
               <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-md animate-bounce-subtle">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className={`text-2xl font-bold text-slate-900 ${selectedFontObj.fontClass}`}>{t.successMsg}</h3>
+              <h3 className="text-2xl font-bold text-slate-900 font-urdu">{t.successMsg}</h3>
               <button
                 onClick={() => setSubmitted(false)}
-                className="bg-emerald-700 hover:bg-emerald-800 text-white px-7 py-3 rounded-xl text-sm font-bold cursor-pointer transition-colors"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white px-7 py-3 rounded-xl text-sm font-bold cursor-pointer transition-colors font-urdu"
               >
                 {isUrdu ? 'نیا پیغام بھیجیں' : 'Send Another'}
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <h2 className={`text-2xl font-bold text-slate-900 border-b border-slate-100 pb-3 ${selectedFontObj.fontClass}`}>
+              <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-3 font-urdu">
                 {t.formTitle}
               </h2>
 
@@ -205,7 +202,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.nameLabel}</label>
+                  <label className="text-xs font-bold text-slate-700 font-urdu">{t.nameLabel}</label>
                   <input
                     type="text"
                     required
@@ -217,7 +214,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
                 </div>
 
                 <div className="space-y-2">
-                  <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.phoneLabel}</label>
+                  <label className="text-xs font-bold text-slate-700 font-urdu">{t.phoneLabel}</label>
                   <input
                     type="text"
                     required
@@ -231,7 +228,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
               </div>
 
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.emailLabel}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.emailLabel}</label>
                 <input
                   type="email"
                   value={email}
@@ -243,7 +240,7 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
               </div>
 
               <div className="space-y-2">
-                <label className={`text-xs font-bold text-slate-700 ${selectedFontObj.fontClass}`}>{t.msgLabel}</label>
+                <label className="text-xs font-bold text-slate-700 font-urdu">{t.msgLabel}</label>
                 <textarea
                   required
                   rows={4}
@@ -257,10 +254,10 @@ export const Contact: React.FC<ContactProps> = ({ currentLang, onAddMessage, cur
               <div>
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-emerald-700/25 transition-all flex items-center gap-2 cursor-pointer animate-shimmer hover:scale-105 active:scale-95"
+                  className="bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-emerald-700/25 transition-all flex items-center gap-2 cursor-pointer animate-shimmer hover:scale-105 active:scale-95 font-urdu"
                 >
                   <Send className="w-4 h-4 text-amber-300" />
-                  <span className={selectedFontObj.fontClass}>{t.submitBtn}</span>
+                  <span>{t.submitBtn}</span>
                 </button>
               </div>
             </form>
