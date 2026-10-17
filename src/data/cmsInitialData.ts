@@ -44,6 +44,17 @@ export interface SiteSettings {
   maintenanceMode: boolean;
   defaultLang: 'ur' | 'en';
   timezone: string;
+  animations?: AnimationSettings;
+}
+
+export interface AnimationSettings {
+  enabled: boolean;
+  intensity: 'subtle' | 'balanced' | 'expressive';
+  enableBackgroundEffects: boolean;
+  enableScrollReveals: boolean;
+  enableHoverEffects: boolean;
+  enableScrollProgressBar: boolean;
+  enableCounters: boolean;
 }
 
 export interface Student {
@@ -303,7 +314,16 @@ export const INITIAL_SETTINGS: SiteSettings = {
   },
   maintenanceMode: false,
   defaultLang: 'ur',
-  timezone: 'Asia/Karachi'
+  timezone: 'Asia/Karachi',
+  animations: {
+    enabled: true,
+    intensity: 'balanced',
+    enableBackgroundEffects: true,
+    enableScrollReveals: true,
+    enableHoverEffects: true,
+    enableScrollProgressBar: true,
+    enableCounters: true,
+  }
 };
 
 export const INITIAL_PAGES_CONTENT: PagesContent = {

@@ -20,7 +20,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { motion } from 'motion/react';
-
+import { AnimatedCounter } from '../components/AnimatedCounter';
 import { SiteSettings, PagesContent, Competition, AnnualAward, SpecialHoliday } from '../data/cmsInitialData';
 import { DailyPeriod, ScheduleDay } from '../types';
 
@@ -118,11 +118,11 @@ export const Home: React.FC<HomeProps> = ({
       <section className="relative bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-950 text-white overflow-hidden py-20 lg:py-24">
         
         {/* Islamic Geometric Arabesque Pattern Background */}
-        <div className="absolute inset-0 opacity-10 bg-islamic-pattern pointer-events-none"></div>
+        <div className={`absolute inset-0 opacity-10 bg-islamic-pattern pointer-events-none ${settings?.animations?.enableBackgroundEffects !== false ? 'animate-pulse-glow' : ''}`}></div>
         
-        {/* Subtle Decorative Architectural Rings */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 border border-emerald-500/20 rounded-full pointer-events-none"></div>
-        <div className="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] border border-amber-400/15 rounded-full pointer-events-none"></div>
+        {/* Subtle Decorative Architectural Rings with slow serene rotation */}
+        <div className={`absolute -top-32 -left-32 w-96 h-96 border border-emerald-500/20 rounded-full pointer-events-none ${settings?.animations?.enableBackgroundEffects !== false ? 'animate-spin-slow' : ''}`}></div>
+        <div className={`absolute -bottom-40 -right-40 w-[28rem] h-[28rem] border border-amber-400/15 rounded-full pointer-events-none ${settings?.animations?.enableBackgroundEffects !== false ? 'animate-spin-reverse-slow' : ''}`}></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -136,18 +136,28 @@ export const Home: React.FC<HomeProps> = ({
             >
               
               {/* Bismillah Calligraphy Ribbon */}
-              <div className="inline-flex items-center gap-2.5 bg-emerald-900/80 border border-amber-400/40 px-5 py-2 rounded-full text-amber-300 shadow-lg">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2.5 bg-emerald-900/80 border border-amber-400/40 px-5 py-2 rounded-full text-amber-300 shadow-lg"
+              >
                 <Sparkles className="w-4 h-4 text-amber-300" />
                 <span className="text-base sm:text-lg font-bold font-quran tracking-wider">
                   {t.bismillah}
                 </span>
                 <Sparkles className="w-4 h-4 text-amber-300" />
-              </div>
+              </motion.div>
 
               {/* Official Institution Title */}
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-urdu drop-shadow-sm">
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-urdu drop-shadow-sm"
+              >
                 {t.title}
-              </h1>
+              </motion.h1>
 
               <p className="text-slate-200 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 font-urdu">
                 {t.subtitle}
@@ -277,7 +287,11 @@ export const Home: React.FC<HomeProps> = ({
             <div className="space-y-2">
               <div className="flex items-baseline justify-center sm:justify-start gap-2.5">
                 <span className="text-5xl sm:text-6xl font-extrabold text-emerald-950 font-mono tracking-tight" dir="ltr">
-                  {settings?.statsTeachers || '22'}
+                  <AnimatedCounter 
+                    value={settings?.statsTeachers || '22'} 
+                    enabled={settings?.animations?.enableCounters !== false}
+                    duration={1600}
+                  />
                 </span>
                 <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 font-urdu">
                   {isUrdu ? 'اساتذہ' : 'Teachers'}
@@ -302,7 +316,11 @@ export const Home: React.FC<HomeProps> = ({
             <div className="space-y-2">
               <div className="flex items-baseline justify-center sm:justify-start gap-2.5">
                 <span className="text-5xl sm:text-6xl font-extrabold text-amber-700 font-mono tracking-tight" dir="ltr">
-                  {settings?.statsStudents || '400+'}
+                  <AnimatedCounter 
+                    value={settings?.statsStudents || '400+'} 
+                    enabled={settings?.animations?.enableCounters !== false}
+                    duration={2000}
+                  />
                 </span>
                 <span className="text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 font-urdu">
                   {isUrdu ? 'طلبہ' : 'Students'}

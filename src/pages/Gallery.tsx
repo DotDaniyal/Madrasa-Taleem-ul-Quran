@@ -98,43 +98,44 @@ export const Gallery: React.FC<GalleryProps> = ({ currentLang, gallery }) => {
 
       {/* Showcase Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredGallery.map((item) => {
+        {filteredGallery.map((item, idx) => {
           const Icon = getIcon(item.iconName);
           return (
-            <div
-              key={item.id}
-              onClick={() => setActiveItem(item)}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 group cursor-pointer hover-lift transition-all flex flex-col justify-between"
-            >
-              <div className="p-7 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-50 text-emerald-800 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                    <Icon className="w-7 h-7 text-emerald-700" />
+            <ScrollReveal key={item.id} variant="fadeUp" delay={idx * 0.05}>
+              <div
+                onClick={() => setActiveItem(item)}
+                className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 group cursor-pointer hover-lift transition-all flex flex-col justify-between h-full"
+              >
+                <div className="p-7 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-50 text-emerald-800 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                      <Icon className="w-7 h-7 text-emerald-700" />
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-mono bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100" dir="ltr">
+                      {item.date}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-slate-400 font-mono bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100" dir="ltr">
-                    {item.date}
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-emerald-800 transition-colors font-urdu">
+                      {isUrdu ? item.titleUr : item.titleEn}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed font-urdu">
+                      {isUrdu ? item.descUr : item.descEn}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-800 font-urdu">
+                    {isUrdu ? 'مدرسہ تعلیم القرآن فریال مسجد' : 'Madrasa Taleem-ul-Quran'}
+                  </span>
+                  <span className="text-xs text-amber-700 font-semibold font-urdu group-hover:underline">
+                    {t.viewDetails}
                   </span>
                 </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-emerald-800 transition-colors font-urdu">
-                    {isUrdu ? item.titleUr : item.titleEn}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed font-urdu">
-                    {isUrdu ? item.descUr : item.descEn}
-                  </p>
-                </div>
               </div>
-
-              <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-800 font-urdu">
-                  {isUrdu ? 'مدرسہ تعلیم القرآن فریال مسجد' : 'Madrasa Taleem-ul-Quran'}
-                </span>
-                <span className="text-xs text-amber-700 font-semibold font-urdu group-hover:underline">
-                  {t.viewDetails}
-                </span>
-              </div>
-            </div>
+            </ScrollReveal>
           );
         })}
       </div>

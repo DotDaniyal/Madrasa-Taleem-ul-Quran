@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Language, AdmissionApplication, Announcement, ContactMessage } from './types';
 import { 
   PublicWebsiteData, 
@@ -41,7 +41,7 @@ export default function App() {
   }, []);
 
   // When admin panel saves changes, update public website state immediately
-  const handleDataUpdatedFromAdmin = (newData: FullAdminData) => {
+  const handleDataUpdatedFromAdmin = useCallback((newData: FullAdminData) => {
     setCmsData({
       settings: newData.settings,
       pagesContent: newData.pagesContent,
@@ -61,7 +61,7 @@ export default function App() {
       footerConfig: newData.footerConfig,
       seoSettings: newData.seoSettings
     });
-  };
+  }, []);
 
   const handleAddApplication = async (newApp: AdmissionApplication) => {
     await submitOnlineAdmission(newApp);

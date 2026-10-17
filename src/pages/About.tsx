@@ -1,6 +1,7 @@
 import React from 'react';
 import { Language, Teacher } from '../types';
 import { BookOpen, ShieldCheck, Award, Users, CheckCircle, Heart, MapPin, Building, Sparkles, GraduationCap } from 'lucide-react';
+import { ScrollReveal } from '../components/ScrollReveal';
 
 interface AboutProps {
   currentLang: Language;
@@ -168,34 +169,36 @@ export const About: React.FC<AboutProps> = ({ currentLang, teachers }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {teachers.map((teacher) => (
-            <div key={teacher.id} className="bg-white rounded-3xl shadow-sm border border-emerald-100 overflow-hidden text-center group hover-lift transition-all flex flex-col justify-between">
-              
-              {/* Dignified Monogram & Header */}
-              <div className="p-8 bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white relative flex flex-col items-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-emerald-950 text-2xl font-bold shadow-lg border-2 border-white/20 mb-4 group-hover:scale-105 transition-transform font-urdu">
-                  {teacher.monogramUr}
+          {teachers.map((teacher, idx) => (
+            <ScrollReveal key={teacher.id} variant="fadeUp" delay={idx * 0.1}>
+              <div className="bg-white rounded-3xl shadow-sm border border-emerald-100 overflow-hidden text-center group hover-lift transition-all flex flex-col justify-between h-full">
+                
+                {/* Dignified Monogram & Header */}
+                <div className="p-8 bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white relative flex flex-col items-center">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-emerald-950 text-2xl font-bold shadow-lg border-2 border-white/20 mb-4 group-hover:scale-105 transition-transform font-urdu">
+                    {teacher.monogramUr}
+                  </div>
+                  <span className="bg-emerald-800/90 text-amber-300 text-xs px-3.5 py-1 rounded-full font-bold border border-emerald-700 font-urdu">
+                    {isUrdu ? teacher.roleUr : teacher.roleEn}
+                  </span>
                 </div>
-                <span className="bg-emerald-800/90 text-amber-300 text-xs px-3.5 py-1 rounded-full font-bold border border-emerald-700 font-urdu">
-                  {isUrdu ? teacher.roleUr : teacher.roleEn}
-                </span>
-              </div>
 
-              <div className="p-6 space-y-3">
-                <h3 className="text-xl font-bold text-slate-900 font-urdu">
-                  {isUrdu ? teacher.nameUr : teacher.nameEn}
-                </h3>
-                <div className="space-y-1.5 text-xs text-slate-600 font-urdu">
-                  <p className="font-semibold text-emerald-800">
-                    {isUrdu ? teacher.qualificationUr : teacher.qualificationEn}
-                  </p>
-                  <p className="text-slate-500">
-                    {isUrdu ? teacher.experienceUr : teacher.experienceEn}
-                  </p>
+                <div className="p-6 space-y-3">
+                  <h3 className="text-xl font-bold text-slate-900 font-urdu">
+                    {isUrdu ? teacher.nameUr : teacher.nameEn}
+                  </h3>
+                  <div className="space-y-1.5 text-xs text-slate-600 font-urdu">
+                    <p className="font-semibold text-emerald-800">
+                      {isUrdu ? teacher.qualificationUr : teacher.qualificationEn}
+                    </p>
+                    <p className="text-slate-500">
+                      {isUrdu ? teacher.experienceUr : teacher.experienceEn}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-            </div>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

@@ -14,7 +14,7 @@ import {
   Sparkles,
   ArrowUp
 } from 'lucide-react';
-
+import { motion } from 'motion/react';
 import { SiteSettings, FooterConfig } from '../data/cmsInitialData';
 
 interface FooterProps {
@@ -107,7 +107,13 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, setti
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10 relative z-10">
         
         {/* Main 4-Column Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-12"
+        >
           
           {/* Column 1: Institutional Branding Area */}
           <div className="space-y-4">
@@ -330,7 +336,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang, setActiveTab, setti
             </div>
           </div>
 
-        </div>
+        </motion.div>
 
         {/* Bottom Bar: Copyright & Back to Top */}
         <div className="pt-8 border-t border-slate-800/90 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-urdu">

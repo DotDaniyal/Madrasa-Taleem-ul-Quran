@@ -146,16 +146,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
 
   // Load data on mount or after login
   useEffect(() => {
+    let isMounted = true;
     if (isAuthenticated) {
       setIsLoading(true);
       fetchAdminData()
         .then(data => {
+          if (!isMounted) return;
           setAdminData(data);
-          if (onDataUpdated) onDataUpdated(data);
+          if (onDataUpdated) {
+            setTimeout(() => {
+              if (isMounted) onDataUpdated(data);
+            }, 0);
+          }
         })
-        .finally(() => setIsLoading(false));
+        .catch(err => {
+          console.error('Error fetching admin data:', err);
+        })
+        .finally(() => {
+          if (isMounted) setIsLoading(false);
+        });
     }
-  }, [isAuthenticated]);
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuthenticated, onDataUpdated]);
 
   // Handle Login
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -193,7 +207,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
       if (res.success) {
         setAdminData(prev => {
           const next = { ...prev, [moduleName]: updatedData };
-          if (onDataUpdated) onDataUpdated(next);
+          if (onDataUpdated) {
+            setTimeout(() => {
+              onDataUpdated(next);
+            }, 0);
+          }
           return next;
         });
         showToast(successNotice || (isUrdu ? 'تبدیلیاں محفوظ ہو گئیں۔' : 'Changes saved successfully!'));
@@ -410,7 +428,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
         { id: 'media', labelUr: 'میڈیا و تصاویر لائبریری', labelEn: 'Media & Image Library', icon: Image, badge: adminData.mediaLibrary.length },
         { id: 'navigation', labelUr: 'نیویگیشن مینو ایڈیٹر', labelEn: 'Navigation Menu Editor', icon: Menu },
         { id: 'footer', labelUr: 'فوٹر ایڈیٹر و روابط', labelEn: 'Footer Editor', icon: LayoutDashboard },
-        { id: 'announcements', labelUr: 'اعلانات و نوٹس بورڈ', labelEn: 'Announcements & Notices', icon: Bell, badge: adminData.announcements.length }
+        { id: 'announcements', labelUr: 'اعلانات و نوٹس بورڈ', labelEn: 'Announcements & Notices', icon: Bell, badge: adminData.announcements.length },
+        { id: 'animations', labelUr: 'اینیمیشنز و موشن سیٹنگز', labelEn: 'Animations & Motion Settings', icon: Sparkles }
       ]
     },
     {
@@ -3018,6 +3037,266 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
                     {isUrdu ? 'سیٹنگز محفوظ کریں' : 'Save Global Settings'}
                   </button>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================= */}
+          {/* ANIMATIONS & MOTION SETTINGS MODULE */}
+          {/* ========================================================= */}
+          {activeModule === 'animations' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-900 font-urdu flex items-center gap-2">
+                    <Sparkles className="w-6 h-6 text-amber-500" />
+                    <span>{isUrdu ? 'اینیمیشنز و موشن سیٹنگز' : 'Animations & Motion Settings'}</span>
+                  </h2>
+                  <p className="text-xs text-slate-500 font-urdu mt-0.5">
+                    {isUrdu 
+                      ? 'ویب سائٹ کے اسکرول ریویل، اینیمیٹڈ بیک گراؤنڈز، ہوور افیکٹس اور پروگریس بار کا مکمل کنٹرول' 
+                      : 'Configure scroll reveals, Islamic background effects, card interactions and progress indicator'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8">
+                {(() => {
+                  const anim = adminData.settings.animations || {
+                    enabled: true,
+                    intensity: 'balanced',
+                    enableBackgroundEffects: true,
+                    enableScrollReveals: true,
+                    enableHoverEffects: true,
+                    enableScrollProgressBar: true,
+                    enableCounters: true
+                  };
+
+                  return (
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        const form = e.target as HTMLFormElement;
+                        const formData = new FormData(form);
+
+                        const updatedAnimations = {
+                          enabled: formData.get('anim_enabled') === 'on',
+                          intensity: (formData.get('anim_intensity') as 'subtle' | 'balanced' | 'expressive') || 'balanced',
+                          enableBackgroundEffects: formData.get('anim_bg') === 'on',
+                          enableScrollReveals: formData.get('anim_reveals') === 'on',
+                          enableHoverEffects: formData.get('anim_hover') === 'on',
+                          enableScrollProgressBar: formData.get('anim_progress') === 'on',
+                          enableCounters: formData.get('anim_counters') === 'on'
+                        };
+
+                        const updatedSettings = {
+                          ...adminData.settings,
+                          animations: updatedAnimations
+                        };
+
+                        await handleSaveModule(
+                          'settings',
+                          updatedSettings,
+                          isUrdu ? 'اینیمیشن سیٹنگز کامیابی سے محفوظ ہو گئیں!' : 'Animation settings saved successfully!'
+                        );
+                      }}
+                      className="space-y-6 text-xs font-urdu"
+                    >
+                      {/* Master Animation Toggle */}
+                      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 flex items-center justify-between gap-4">
+                        <div className="space-y-1">
+                          <span className="font-bold text-sm text-emerald-950 flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-emerald-700" />
+                            <span>{isUrdu ? 'مرکزی اینیمیشن سوئچ (Master Animation Switch)' : 'Master Animation Switch'}</span>
+                          </span>
+                          <p className="text-[11px] text-slate-600">
+                            {isUrdu 
+                              ? 'پورے پورٹل پر آرائشی اینیمیشنز کو آن یا آف کریں۔ (Reduced Motion موڈ میں خودکار طور پر بند ہو جاتی ہیں)' 
+                              : 'Enable or disable all decorative animations throughout the public website.'}
+                          </p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                          <input 
+                            type="checkbox" 
+                            name="anim_enabled" 
+                            defaultChecked={anim.enabled} 
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
+                        </label>
+                      </div>
+
+                      {/* Animation Intensity Selector */}
+                      <div className="space-y-3">
+                        <label className="block font-bold text-slate-900 text-sm">
+                          {isUrdu ? 'اینیمیشن کی رفتار و شدت (Animation Intensity)' : 'Animation Intensity'}
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          {[
+                            { value: 'subtle', titleUr: 'خفیف (Subtle - 0.35s)', titleEn: 'Subtle (0.35s)', descUr: 'نہایت ہلکی اور تیز ترین حرکت' },
+                            { value: 'balanced', titleUr: 'متوازن (Balanced - 0.55s)', titleEn: 'Balanced (0.55s)', descUr: 'بہترین اور پروقار تجربہ (تجویز کردہ)' },
+                            { value: 'expressive', titleUr: 'نمایاں (Expressive - 0.8s)', titleEn: 'Expressive (0.8s)', descUr: 'واضح اور آہستہ تدریجی ظہور' }
+                          ].map((opt) => (
+                            <label 
+                              key={opt.value} 
+                              className="border border-slate-200 rounded-2xl p-3.5 flex flex-col justify-between cursor-pointer hover:bg-slate-50 transition-all has-checked:border-emerald-700 has-checked:bg-emerald-50/50 has-checked:ring-1 has-checked:ring-emerald-700"
+                            >
+                              <div className="flex items-center justify-between mb-1.5">
+                                <span className="font-bold text-slate-900">{isUrdu ? opt.titleUr : opt.titleEn}</span>
+                                <input 
+                                  type="radio" 
+                                  name="anim_intensity" 
+                                  value={opt.value} 
+                                  defaultChecked={anim.intensity === opt.value}
+                                  className="text-emerald-700 focus:ring-emerald-600"
+                                />
+                              </div>
+                              <span className="text-[11px] text-slate-500 leading-normal">{opt.descUr}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Granular Animation Controls Grid */}
+                      <div className="space-y-3">
+                        <label className="block font-bold text-slate-900 text-sm">
+                          {isUrdu ? 'خصوصی اینیمیشن فیچرز (Granular Feature Toggles)' : 'Feature Toggles'}
+                        </label>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          
+                          {/* 1. Islamic Background Effects */}
+                          <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              name="anim_bg" 
+                              defaultChecked={anim.enableBackgroundEffects}
+                              className="mt-1 text-emerald-700 rounded focus:ring-emerald-600"
+                            />
+                            <div className="space-y-0.5">
+                              <span className="font-bold text-slate-900 block">
+                                {isUrdu ? 'اسلامی بیک گراؤنڈ موشن (Islamic Ambient Motion)' : 'Islamic Ambient Motion'}
+                              </span>
+                              <span className="text-[11px] text-slate-500 block leading-relaxed">
+                                {isUrdu ? 'ہیرو سیکشن میں عربیسک پیٹرن اور آرائشی دائروں کی دھیمی حرکت' : 'Subtle floating geometric arabesque background rings'}
+                              </span>
+                            </div>
+                          </label>
+
+                          {/* 2. Scroll Reveals */}
+                          <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              name="anim_reveals" 
+                              defaultChecked={anim.enableScrollReveals}
+                              className="mt-1 text-emerald-700 rounded focus:ring-emerald-600"
+                            />
+                            <div className="space-y-0.5">
+                              <span className="font-bold text-slate-900 block">
+                                {isUrdu ? 'اسکرول ریویل (Scroll-Triggered Reveals)' : 'Scroll-Triggered Reveals'}
+                              </span>
+                              <span className="text-[11px] text-slate-500 block leading-relaxed">
+                                {isUrdu ? 'صفحہ اسکرول کرنے پر کارڈز اور سیکشنز کا اوپر ابھرنا' : 'Cards and sections animate gracefully into view when scrolled to'}
+                              </span>
+                            </div>
+                          </label>
+
+                          {/* 3. Card Hover & Lift */}
+                          <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              name="anim_hover" 
+                              defaultChecked={anim.enableHoverEffects}
+                              className="mt-1 text-emerald-700 rounded focus:ring-emerald-600"
+                            />
+                            <div className="space-y-0.5">
+                              <span className="font-bold text-slate-900 block">
+                                {isUrdu ? 'کارڈز پر ہوور لیفٹ (Card Hover & Lift)' : 'Card Hover & Lift'}
+                              </span>
+                              <span className="text-[11px] text-slate-500 block leading-relaxed">
+                                {isUrdu ? 'ماؤس لانے پر کارڈز کا ہلکا اوپر اٹھنا اور نرم سایہ دار ہونا' : 'Cards elevate subtly on mouse hover with smooth shadow'}
+                              </span>
+                            </div>
+                          </label>
+
+                          {/* 4. Scroll Progress Indicator */}
+                          <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              name="anim_progress" 
+                              defaultChecked={anim.enableScrollProgressBar}
+                              className="mt-1 text-emerald-700 rounded focus:ring-emerald-600"
+                            />
+                            <div className="space-y-0.5">
+                              <span className="font-bold text-slate-900 block">
+                                {isUrdu ? 'اسکرول پروگریس بار (Scroll Progress Bar)' : 'Scroll Progress Indicator'}
+                              </span>
+                              <span className="text-[11px] text-slate-500 block leading-relaxed">
+                                {isUrdu ? 'اسٹکی نیویگیشن بار کے اوپر باریک گولڈن/زمردی پروگریس لائن' : 'Slim progress line at top of sticky navigation bar'}
+                              </span>
+                            </div>
+                          </label>
+
+                          {/* 5. Statistics Counters */}
+                          <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer sm:col-span-2">
+                            <input 
+                              type="checkbox" 
+                              name="anim_counters" 
+                              defaultChecked={anim.enableCounters}
+                              className="mt-1 text-emerald-700 rounded focus:ring-emerald-600"
+                            />
+                            <div className="space-y-0.5">
+                              <span className="font-bold text-slate-900 block">
+                                {isUrdu ? 'اعداد و شمار کا لائیو کاؤنٹر (Animated Statistics Counters)' : 'Animated Statistics Counters'}
+                              </span>
+                              <span className="text-[11px] text-slate-500 block leading-relaxed">
+                                {isUrdu ? '22 اساتذہ اور 400+ طلبہ کے کارڈز پر نمبرز کا اینیمیٹڈ طریقے سے گنتی مکمل کرنا' : 'Numbers count up smoothly when scrolled into the statistics section'}
+                              </span>
+                            </div>
+                          </label>
+
+                        </div>
+                      </div>
+
+                      {/* Interactive Sandbox Test Preview */}
+                      <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-3">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                          <span className="font-bold text-amber-300 font-mono text-[11px]">LIVE MOTION PREVIEW</span>
+                          <span className="text-[10px] text-slate-400 font-urdu">{isUrdu ? 'موجودہ سیٹنگز کی جانچ' : 'Test Active Settings'}</span>
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+                          <div className="space-y-1 text-start">
+                            <div className="text-sm font-bold text-white font-urdu">مدرسہ تعلیم القرآن فریال مسجد</div>
+                            <div className="text-[11px] text-emerald-300 font-urdu">حفظ و ناظرہ مع تجوید • باوقار دینی ادارہ</div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                showToast(isUrdu ? 'اینیمیشن ٹیسٹ مکمل ہوا' : 'Animation test complete');
+                              }}
+                              className="px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm hover-lift active:scale-95 cursor-pointer font-urdu"
+                            >
+                              {isUrdu ? 'ٹیسٹ بٹن' : 'Test Button'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Submit Button */}
+                      <div className="pt-2 flex items-center justify-end gap-3">
+                        <button
+                          type="submit"
+                          className="px-8 py-3 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all cursor-pointer font-urdu flex items-center gap-2"
+                        >
+                          <Save className="w-4 h-4 text-amber-300" />
+                          <span>{isUrdu ? 'اینیمیشن سیٹنگز محفوظ کریں' : 'Save Animation Settings'}</span>
+                        </button>
+                      </div>
+
+                    </form>
+                  );
+                })()}
               </div>
             </div>
           )}
