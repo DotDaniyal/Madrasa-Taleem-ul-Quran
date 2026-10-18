@@ -52,7 +52,10 @@ import {
   AdmissionApplication,
   ContactMessage,
   Donation,
-  DonationCategory
+  DonationCategory,
+  TeacherAttendance,
+  TeacherPayroll,
+  FeeVoucher
 } from '../types';
 
 export interface DatabaseSchema {
@@ -63,6 +66,9 @@ export interface DatabaseSchema {
   admissions: AdmissionApplication[];
   donations: Donation[];
   donationCategories: DonationCategory[];
+  teacherAttendance: TeacherAttendance[];
+  teacherPayroll: TeacherPayroll[];
+  feeVouchers: FeeVoucher[];
   programs: Program[];
   dailyTimetable: DailyPeriod[];
   weeklySchedule: ScheduleDay[];
@@ -104,6 +110,9 @@ function getDefaultData(): DatabaseSchema {
     admissions: INITIAL_APPLICATIONS,
     donations: [],
     donationCategories: INITIAL_DONATION_CATEGORIES,
+    teacherAttendance: [],
+    teacherPayroll: [],
+    feeVouchers: [],
     programs: INITIAL_PROGRAMS,
     dailyTimetable: DAILY_TIMETABLE,
     weeklySchedule: WEEKLY_SCHEDULE,

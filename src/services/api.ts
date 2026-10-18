@@ -25,8 +25,13 @@ import {
   AdmissionApplication,
   ContactMessage,
   Donation,
-  DonationCategory
+  DonationCategory,
+  BiometricPunch,
+  TeacherPayroll,
+  FeeVoucher,
+  BiometricSettings
 } from '../types';
+import { DEFAULT_BIOMETRIC_SETTINGS } from '../utils/excelBiometricEngine';
 import {
   INITIAL_SETTINGS,
   INITIAL_PAGES_CONTENT,
@@ -81,6 +86,10 @@ export interface FullAdminData {
   adminUsers: AdminUser[];
   activityLogs: AuditLog[];
   messages: ContactMessage[];
+  teacherPunches?: BiometricPunch[];
+  payrollRecords?: TeacherPayroll[];
+  feeVouchers?: FeeVoucher[];
+  biometricSettings?: BiometricSettings;
 }
 
 export interface PublicWebsiteData {
@@ -149,7 +158,8 @@ export function getDefaultPublicData(): PublicWebsiteData {
     annualAwards: INITIAL_ANNUAL_AWARDS,
     navItems: INITIAL_NAV_ITEMS,
     footerConfig: INITIAL_FOOTER_CONFIG,
-    seoSettings: INITIAL_PAGE_SEO
+    seoSettings: INITIAL_PAGE_SEO,
+    donationCategories: INITIAL_DONATION_CATEGORIES
   };
 }
 
@@ -179,7 +189,11 @@ export function getDefaultAdminData(): FullAdminData {
     seoSettings: INITIAL_PAGE_SEO,
     adminUsers: INITIAL_ADMIN_USERS,
     activityLogs: INITIAL_AUDIT_LOGS,
-    messages: []
+    messages: [],
+    teacherPunches: [],
+    payrollRecords: [],
+    feeVouchers: [],
+    biometricSettings: DEFAULT_BIOMETRIC_SETTINGS
   };
 }
 

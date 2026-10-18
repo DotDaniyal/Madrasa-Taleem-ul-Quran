@@ -351,6 +351,12 @@ export const INITIAL_GALLERY: GalleryItem[] = [
 export const INITIAL_TEACHERS: Teacher[] = [
   {
     id: 't-1',
+    biometricId: 'T-101',
+    fullName: 'قاری محمد احمد صاحب',
+    phoneNumber: '03001234567',
+    baseSalary: 35000,
+    status: 'active',
+    programId: 'hifz',
     nameUr: 'قاری محمد احمد صاحب',
     nameEn: 'Qari Muhammad Ahmed',
     roleUr: 'مہتمم و شیخ القراء',
@@ -363,6 +369,12 @@ export const INITIAL_TEACHERS: Teacher[] = [
   },
   {
     id: 't-2',
+    biometricId: 'T-102',
+    fullName: 'مولانا عبداللہ فاروقی',
+    phoneNumber: '03129876543',
+    baseSalary: 30000,
+    status: 'active',
+    programId: 'hifz',
     nameUr: 'مولانا عبداللہ فاروقی',
     nameEn: 'Maulana Abdullah Farooqi',
     roleUr: 'ناظمِ تعلیمات و استادِ شعبہ حفظ',
@@ -375,6 +387,12 @@ export const INITIAL_TEACHERS: Teacher[] = [
   },
   {
     id: 't-3',
+    biometricId: 'T-103',
+    fullName: 'قاری زبیر احمد نقشبندی',
+    phoneNumber: '03335556677',
+    baseSalary: 28000,
+    status: 'active',
+    programId: 'nazra',
     nameUr: 'قاری زبیر احمد نقشبندی',
     nameEn: 'Qari Zubair Ahmed Naqshbandi',
     roleUr: 'استادِ ناظرہ، نورانی قاعدہ و تجوید',

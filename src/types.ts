@@ -95,17 +95,121 @@ export interface GalleryItem {
 
 export interface Teacher {
   id: string;
-  nameUr: string;
-  nameEn: string;
-  roleUr: string;
-  roleEn: string;
-  qualificationUr: string;
-  qualificationEn: string;
-  experienceUr: string;
-  experienceEn: string;
-  monogramUr: string;
-  status?: 'active' | 'archived';
-  imageUrl?: string;
+  biometricId?: string;
+  fullName?: string;
+  phoneNumber?: string;
+  baseSalary?: number;
+  status?: 'active' | 'leave' | 'resigned' | 'archived';
+  programId?: string;
+  joiningDate?: string;
+  designation?: string;
+  nameUr?: string;
+  nameEn?: string;
+  roleUr?: string;
+  roleEn?: string;
+  qualificationUr?: string;
+  qualificationEn?: string;
+  experienceUr?: string;
+  experienceEn?: string;
+  monogramUr?: string;
+}
+
+export interface Student {
+  id: string;
+  rollNo?: string;
+  fullName?: string;
+  name?: string;
+  parentName?: string;
+  fatherName?: string;
+  parentPhone?: string;
+  guardianPhone?: string;
+  programId?: string;
+  monthlyFee?: number;
+  enrollmentDate?: string;
+  admissionDate?: string;
+  status?: 'active' | 'graduated' | 'leave' | 'inactive' | 'archived';
+  academicNotes?: string;
+  age?: string;
+  address?: string;
+}
+
+export interface TeacherAttendance {
+  id: string;
+  teacherId: string;
+  biometricId?: string;
+  date: string;
+  checkInTime?: string;
+  checkOutTime?: string;
+  status: 'present' | 'absent' | 'leave' | 'late' | 'half-day' | 'on-time';
+  adminNotes?: string;
+}
+
+export interface BiometricPunch {
+  id: string;
+  biometricId: string;
+  teacherId?: string;
+  date: string;
+  checkInTime?: string;
+  checkOutTime?: string;
+  status: 'on-time' | 'late' | 'half-day' | 'absent' | 'leave';
+  lateMinutes?: number;
+  rawPunches?: string[];
+  adminNotes?: string;
+}
+
+export interface BiometricSettings {
+  officialStartTime: string;
+  officialEndTime: string;
+  lateGraceMinutes: number;
+  latePenaltyType: 'fixed_amount' | 'late_rule_days';
+  fixedLatePenaltyAmount: number;
+  latesPerAbsentDay: number;
+  unapprovedAbsentDeductionRate: 'proportional_30' | 'fixed_daily';
+  workingDaysPerMonth: number;
+}
+
+export interface TeacherPayroll {
+  id: string;
+  teacherId: string;
+  teacherName?: string;
+  biometricId?: string;
+  month: string;
+  year: number;
+  baseSalary?: number;
+  baseAmount: number;
+  workingDays?: number;
+  presentDays?: number;
+  lateArrivalsCount?: number;
+  latePenaltyDeduction?: number;
+  absentDaysCount?: number;
+  absentDeduction?: number;
+  bonusAmount?: number;
+  deductions: number;
+  netAmount: number;
+  netSalary?: number;
+  status: 'unpaid' | 'processing' | 'paid';
+  paymentDate?: string;
+  paymentMethod?: 'bank_transfer' | 'jazzcash' | 'easypaisa' | 'cash';
+  referenceNo?: string;
+  notes?: string;
+}
+
+export interface FeeVoucher {
+  id: string;
+  studentId: string;
+  studentRollNo?: string;
+  studentName?: string;
+  parentName?: string;
+  programId?: string;
+  month: string;
+  year: number;
+  amount: number;
+  status: 'unpaid' | 'paid' | 'partial' | 'waived';
+  paidDate?: string;
+  paymentMethod?: string;
+  receiptNo?: string;
+  discount?: number;
+  notes?: string;
 }
 
 export interface DonationCategory {

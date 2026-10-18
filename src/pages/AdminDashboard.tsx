@@ -7,8 +7,19 @@ import {
   Program, 
   DailyPeriod, 
   ScheduleDay, 
-  Teacher 
+  Teacher,
+  BiometricPunch,
+  BiometricSettings,
+  TeacherPayroll,
+  FeeVoucher
 } from '../types';
+import { BiometricAttendanceModule } from '../components/admin/BiometricAttendanceModule';
+import { AutomatedPayrollModule } from '../components/admin/AutomatedPayrollModule';
+import { StudentFeeModule } from '../components/admin/StudentFeeModule';
+import { DataProtectionBackup } from '../components/admin/DataProtectionBackup';
+import { BulkImporterModal } from '../components/admin/BulkImporterModal';
+import { BiometricCardsModal } from '../components/admin/BiometricCardsModal';
+import { formatDateISO, formatPKR } from '../utils/excelBiometricEngine';
 import {
   FullAdminData,
   fetchAdminData,
@@ -83,7 +94,12 @@ import {
   Database,
   History,
   AlertTriangle,
-  Info
+  Info,
+  DollarSign,
+  CreditCard,
+  ShieldCheck,
+  FileSpreadsheet,
+  QrCode
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -133,6 +149,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
   const [isAddingAnnouncement, setIsAddingAnnouncement] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+
+  // Enterprise Bulk Importer & Biometric Cards Modals
+  const [isBulkImporterOpen, setIsBulkImporterOpen] = useState(false);
+  const [bulkImporterType, setBulkImporterType] = useState<'teacher' | 'student'>('teacher');
+  const [isBiometricCardsOpen, setIsBiometricCardsOpen] = useState(false);
+  const [biometricCardsType, setBiometricCardsType] = useState<'teacher' | 'student'>('teacher');
 
   // Page Editor active page
   const [editorPage, setEditorPage] = useState<'home' | 'about' | 'programs' | 'schedule' | 'admissions' | 'contact'>('home');
@@ -220,6 +242,38 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
       }
     } catch (err: any) {
       showToast(err.message || 'Error saving changes', 'error');
+    }
+  };
+
+  const handleSavePunches = async (punches: BiometricPunch[]) => {
+    setAdminData(prev => ({ ...prev, teacherPunches: punches }));
+    await saveAdminModule('teacherPunches' as any, punches);
+    showToast(isUrdu ? 'بائیو میٹرک حاضری لاگز محفوظ ہو گئے' : 'Biometric punches saved successfully');
+  };
+
+  const handleSaveBiometricSettings = async (settings: BiometricSettings) => {
+    setAdminData(prev => ({ ...prev, biometricSettings: settings }));
+    await saveAdminModule('biometricSettings' as any, settings);
+    showToast(isUrdu ? 'بائیو میٹرک اصول و جرمانہ سیٹنگز محفوظ ہو گئیں' : 'Biometric settings saved');
+  };
+
+  const handleSavePayrolls = async (payrolls: TeacherPayroll[]) => {
+    setAdminData(prev => ({ ...prev, payrollRecords: payrolls }));
+    await saveAdminModule('payrollRecords' as any, payrolls);
+  };
+
+  const handleSaveVouchers = async (vouchers: FeeVoucher[]) => {
+    setAdminData(prev => ({ ...prev, feeVouchers: vouchers }));
+    await saveAdminModule('feeVouchers' as any, vouchers);
+  };
+
+  const handleRestoreBackupFull = async (restored: FullAdminData) => {
+    setAdminData(restored);
+    try {
+      localStorage.setItem('tmq_admin_cache', JSON.stringify(restored));
+      showToast(isUrdu ? 'تمام ریکارڈز کامیابی سے بحال کر دیے گئے' : 'All database records restored successfully');
+    } catch {
+      showToast('Error persisting restored backup', 'error');
     }
   };
 
@@ -401,6 +455,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
         { id: 'students', labelUr: 'طلبہ کرام مینجمنٹ', labelEn: 'Students Directory', icon: GraduationCap, badge: adminData.students.length },
         { id: 'teachers', labelUr: 'اساتذہ کرام مینجمنٹ', labelEn: 'Teachers Directory', icon: Users, badge: adminData.teachers.length },
         { id: 'admissions', labelUr: 'آن لائن داخلہ درخواستیں', labelEn: 'Online Admissions', icon: FileCheck, badge: adminData.admissions.filter(a => a.status === 'pending').length }
+      ]
+    },
+    {
+      categoryUr: 'بائیو میٹرک، پے رول و فیسیں',
+      categoryEn: 'Biometrics, Payroll & Fees',
+      items: [
+        { id: 'attendance-biometric', labelUr: 'بائیو میٹرک ڈیوائس حاضری', labelEn: 'Biometric Machine Sync', icon: Clock },
+        { id: 'payroll', labelUr: 'خودکار تنخواہ و پے رول', labelEn: 'Automated Penalty Payroll', icon: DollarSign },
+        { id: 'student-fees', labelUr: 'طلبہ فیس چالان و رسیدیں', labelEn: 'Student Fee Management', icon: CreditCard }
       ]
     },
     {
@@ -683,6 +746,105 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
 
               </div>
 
+              {/* Live Biometric, Payroll & Fee Collection Master Cards */}
+              {(() => {
+                const todayISO = formatDateISO();
+                const curMonth = todayISO.slice(0, 7);
+                const todayPunches = adminData.teacherPunches?.filter(p => p.date === todayISO) || [];
+                const onTimeCount = todayPunches.filter(p => p.status === 'on-time').length;
+                const lateCount = todayPunches.filter(p => p.status === 'late').length;
+                const absentCount = Math.max(0, adminData.teachers.length - (onTimeCount + lateCount));
+
+                const curMonthPayrolls = adminData.payrollRecords?.filter(p => p.month === curMonth) || [];
+                const totDeduct = curMonthPayrolls.reduce((s, p) => s + (p.deductions || 0), 0);
+                const totNet = curMonthPayrolls.reduce((s, p) => s + (p.netSalary || p.netAmount || 0), 0);
+
+                const unpaidStaff = curMonthPayrolls.filter(p => p.status === 'unpaid').length;
+                const processingStaff = curMonthPayrolls.filter(p => p.status === 'processing').length;
+                const paidStaff = curMonthPayrolls.filter(p => p.status === 'paid').length;
+
+                const curMonthVouchers = adminData.feeVouchers?.filter(v => v.month === curMonth) || [];
+                const feeExp = curMonthVouchers.reduce((s, v) => s + (v.amount || 0), 0);
+                const feeColl = curMonthVouchers.filter(v => v.status === 'paid').reduce((s, v) => s + (v.amount || 0), 0);
+                const feeRem = feeExp - feeColl;
+
+                return (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 font-urdu">
+                    
+                    {/* Today Biometric Status */}
+                    <div 
+                      onClick={() => setActiveModule('attendance-biometric')}
+                      className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm cursor-pointer hover:border-emerald-500 transition-all space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-500">{isUrdu ? 'آج کی بائیو میٹرک حاضری' : 'Biometric Punch Status Today'}</span>
+                        <Clock className="w-5 h-5 text-amber-500" />
+                      </div>
+                      <div className="text-xl font-extrabold text-slate-900 font-mono flex items-baseline gap-2">
+                        <span className="text-emerald-700">{onTimeCount} {isUrdu ? 'وقت پر' : 'On-time'}</span>
+                        <span className="text-xs text-amber-600">({lateCount} {isUrdu ? 'لیٹ' : 'Late'})</span>
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {isUrdu ? `${absentCount} اساتذہ غیر حاضر` : `${absentCount} Teachers Absent`}
+                      </div>
+                    </div>
+
+                    {/* Monthly Salary Burden */}
+                    <div 
+                      onClick={() => setActiveModule('payroll')}
+                      className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm cursor-pointer hover:border-emerald-500 transition-all space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-500">{isUrdu ? 'اس ماہ کا خالص تنخواہ بجٹ' : 'Monthly Salary Burden'}</span>
+                        <DollarSign className="w-5 h-5 text-emerald-700" />
+                      </div>
+                      <div className="text-xl font-extrabold text-emerald-900 font-mono">
+                        {formatPKR(totNet || (adminData.teachers.reduce((s, t) => s + (t.baseSalary || 25000), 0)))}
+                      </div>
+                      <div className="text-[11px] text-rose-700 font-mono">
+                        -{formatPKR(totDeduct)} {isUrdu ? 'کٹوتی (جرمانہ+غیر حاضری)' : 'Deductions'}
+                      </div>
+                    </div>
+
+                    {/* Payroll Workflow Status Overview */}
+                    <div 
+                      onClick={() => setActiveModule('payroll')}
+                      className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm cursor-pointer hover:border-emerald-500 transition-all space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-500">{isUrdu ? 'تنخواہ ادائیگی کی صورتحال' : 'Salary Workflow Overview'}</span>
+                        <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div className="flex items-center gap-3 text-xs font-bold">
+                        <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">{isUrdu ? `ادا شدہ: ${paidStaff}` : `Paid: ${paidStaff}`}</span>
+                        <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">{isUrdu ? `زیرِ عمل: ${processingStaff}` : `Processing: ${processingStaff}`}</span>
+                      </div>
+                      <div className="text-[11px] text-rose-700 font-bold">
+                        {isUrdu ? `واجب الادا (بقیہ): ${unpaidStaff} اساتذہ` : `Unpaid: ${unpaidStaff} Teachers`}
+                      </div>
+                    </div>
+
+                    {/* Student Fee Collection Progress */}
+                    <div 
+                      onClick={() => setActiveModule('student-fees')}
+                      className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm cursor-pointer hover:border-emerald-500 transition-all space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-500">{isUrdu ? 'ماہانہ فیس وصولی پیش رفت' : 'Monthly Fee Collection'}</span>
+                        <CreditCard className="w-5 h-5 text-emerald-800" />
+                      </div>
+                      <div className="text-xl font-extrabold text-emerald-800 font-mono">
+                        {formatPKR(feeColl)}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {isUrdu ? `بقیہ: ${formatPKR(feeRem)}` : `Remaining: ${formatPKR(feeRem)}`}
+                      </div>
+                    </div>
+
+                  </div>
+                );
+              })()}
+
               {/* Quick Actions Shortcuts */}
               <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
                 <h3 className="text-base font-bold text-slate-900 font-urdu flex items-center gap-2">
@@ -692,51 +854,51 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                   <button 
-                    onClick={() => { setActiveModule('students'); setIsAddingStudent(true); }}
-                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
+                    onClick={() => setActiveModule('attendance-biometric')}
+                    className="p-3.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Plus className="w-5 h-5 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-800">{isUrdu ? 'نیا طالب علم' : 'Add Student'}</span>
+                    <Upload className="w-5 h-5 text-emerald-800" />
+                    <span className="text-xs font-extrabold text-emerald-950">{isUrdu ? 'پنچ فائل اپلوڈ' : 'Upload Biometric'}</span>
                   </button>
 
                   <button 
-                    onClick={() => { setActiveModule('announcements'); setIsAddingAnnouncement(true); }}
-                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
+                    onClick={() => { setBulkImporterType('student'); setIsBulkImporterOpen(true); }}
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Bell className="w-5 h-5 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-800">{isUrdu ? 'نیا اعلان' : 'Add Notice'}</span>
+                    <FileSpreadsheet className="w-5 h-5 text-emerald-800" />
+                    <span className="text-xs font-extrabold text-slate-900">{isUrdu ? 'طلبہ ایکسل امپورٹ' : 'Import Students Excel'}</span>
                   </button>
 
                   <button 
-                    onClick={() => setActiveModule('website-editor')}
-                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
+                    onClick={() => { setBulkImporterType('teacher'); setIsBulkImporterOpen(true); }}
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Edit className="w-5 h-5 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-800">{isUrdu ? 'پیج ایڈیٹر' : 'Page Editor'}</span>
+                    <FileSpreadsheet className="w-5 h-5 text-amber-600" />
+                    <span className="text-xs font-extrabold text-slate-900">{isUrdu ? 'اساتذہ ایکسل امپورٹ' : 'Import Teachers Excel'}</span>
                   </button>
 
                   <button 
-                    onClick={() => setActiveModule('timetable')}
-                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
+                    onClick={() => setActiveModule('payroll')}
+                    className="p-3.5 rounded-2xl bg-emerald-900 text-white hover:bg-emerald-800 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2 shadow-md"
                   >
-                    <Clock className="w-5 h-5 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-800">{isUrdu ? 'ٹائم ٹیبل' : 'Timetable'}</span>
+                    <DollarSign className="w-5 h-5 text-amber-300" />
+                    <span className="text-xs font-extrabold">{isUrdu ? 'ماہانہ پے رول ووچر' : 'Generate Payroll'}</span>
                   </button>
 
                   <button 
-                    onClick={() => setActiveModule('logo')}
-                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
+                    onClick={() => setActiveModule('student-fees')}
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-rose-50 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Image className="w-5 h-5 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-800">{isUrdu ? 'لوگو کنٹرول' : 'Logo Control'}</span>
+                    <CreditCard className="w-5 h-5 text-rose-700" />
+                    <span className="text-xs font-extrabold text-slate-900">{isUrdu ? 'فیس نادہندگان لسٹ' : 'Fee Defaulters List'}</span>
                   </button>
 
                   <button 
                     onClick={() => setActiveModule('backup')}
-                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
+                    className="p-3.5 rounded-2xl bg-slate-50 hover:bg-amber-50 border border-slate-200 text-center font-urdu transition-all cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Database className="w-5 h-5 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-800">{isUrdu ? 'بیک اپ' : 'Backup DB'}</span>
+                    <Database className="w-5 h-5 text-amber-700" />
+                    <span className="text-xs font-extrabold text-slate-900">{isUrdu ? 'ڈیٹا سیفٹی و بیک اپ' : 'Data Backup'}</span>
                   </button>
                 </div>
               </div>
@@ -792,21 +954,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => { setBulkImporterType('student'); setIsBulkImporterOpen(true); }}
+                    className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                  >
+                    <FileSpreadsheet className="w-4 h-4" />
+                    <span>{isUrdu ? 'ایکسل امپورٹ' : 'Import Excel'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => { setBiometricCardsType('student'); setIsBiometricCardsOpen(true); }}
+                    className="px-3.5 py-2 bg-emerald-900 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                  >
+                    <QrCode className="w-4 h-4 text-amber-300" />
+                    <span>{isUrdu ? 'کارڈز پرنٹ' : 'Print ID Cards'}</span>
+                  </button>
+
                   <button
                     onClick={() => downloadCSV('students')}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer"
+                    className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-4 h-4 text-slate-600" />
-                    <span>{isUrdu ? 'CSV ایکسپورٹ' : 'Export CSV'}</span>
+                    <span>{isUrdu ? 'CSV' : 'Export CSV'}</span>
                   </button>
 
                   <button
                     onClick={() => { setIsAddingStudent(true); setEditingStudent(null); }}
-                    className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                    className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
                   >
                     <Plus className="w-4 h-4 text-amber-300" />
-                    <span>{isUrdu ? 'نیا طالب علم درج کریں' : 'Add New Student'}</span>
+                    <span>{isUrdu ? 'نیا طالب علم' : 'Add Student'}</span>
                   </button>
                 </div>
               </div>
@@ -854,23 +1032,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
                     <tbody className="divide-y divide-slate-100">
                       {adminData.students
                         .filter(s => {
-                          const matchesSearch = s.name.toLowerCase().includes(studentSearch.toLowerCase()) || 
-                                               s.fatherName.toLowerCase().includes(studentSearch.toLowerCase()) || 
-                                               s.guardianPhone.includes(studentSearch);
+                          const sName = s.fullName || s.name || '';
+                          const sFather = s.parentName || s.fatherName || '';
+                          const sPhone = s.parentPhone || s.guardianPhone || '';
+                          const matchesSearch = sName.toLowerCase().includes(studentSearch.toLowerCase()) || 
+                                               sFather.toLowerCase().includes(studentSearch.toLowerCase()) || 
+                                               sPhone.includes(studentSearch);
                           const matchesProg = studentProgramFilter === 'all' || s.programId === studentProgramFilter;
                           return matchesSearch && matchesProg;
                         })
                         .map(s => (
                           <tr key={s.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="p-3.5 font-mono text-emerald-800 font-bold">{s.id}</td>
-                            <td className="p-3.5 font-bold text-slate-900">{s.name}</td>
-                            <td className="p-3.5 text-slate-600">{s.fatherName}</td>
+                            <td className="p-3.5 font-mono text-emerald-800 font-bold">{s.rollNo || s.id}</td>
+                            <td className="p-3.5 font-bold text-slate-900">{s.fullName || s.name}</td>
+                            <td className="p-3.5 text-slate-600">{s.parentName || s.fatherName}</td>
                             <td className="p-3.5">
                               <span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-bold text-[11px]">
                                 {s.programId === 'hifz' ? 'حفظ القرآن' : s.programId === 'nazra' ? 'ناظرہ قرآن' : 'دینیات'}
                               </span>
                             </td>
-                            <td className="p-3.5 font-mono text-slate-600" dir="ltr">{s.guardianPhone}</td>
+                            <td className="p-3.5 font-mono text-slate-600" dir="ltr">{s.parentPhone || s.guardianPhone}</td>
                             <td className="p-3.5">
                               <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                                 s.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-600'
@@ -1039,21 +1220,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => { setBulkImporterType('teacher'); setIsBulkImporterOpen(true); }}
+                    className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                  >
+                    <FileSpreadsheet className="w-4 h-4" />
+                    <span>{isUrdu ? 'ایکسل امپورٹ' : 'Import Excel'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => { setBiometricCardsType('teacher'); setIsBiometricCardsOpen(true); }}
+                    className="px-3.5 py-2 bg-emerald-900 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                  >
+                    <QrCode className="w-4 h-4 text-amber-300" />
+                    <span>{isUrdu ? 'بائیو میٹرک کارڈز' : 'Print Cards'}</span>
+                  </button>
+
                   <button
                     onClick={() => downloadCSV('teachers')}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer"
+                    className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-4 h-4 text-slate-600" />
-                    <span>{isUrdu ? 'CSV ایکسپورٹ' : 'Export CSV'}</span>
+                    <span>{isUrdu ? 'CSV' : 'Export CSV'}</span>
                   </button>
 
                   <button
                     onClick={() => { setIsAddingTeacher(true); setEditingTeacher(null); }}
-                    className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                    className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-urdu flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
                   >
                     <Plus className="w-4 h-4 text-amber-300" />
-                    <span>{isUrdu ? 'نیا استاد درج کریں' : 'Add Teacher'}</span>
+                    <span>{isUrdu ? 'نیا استاد' : 'Add Teacher'}</span>
                   </button>
                 </div>
               </div>
@@ -2892,102 +3089,55 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
           {/* ========================================================= */}
           {/* 27. DATABASE BACKUP AND RESTORE */}
           {/* ========================================================= */}
+          {/* ========================================================= */}
+          {/* BIOMETRIC MACHINE ATTENDANCE MODULE */}
+          {/* ========================================================= */}
+          {activeModule === 'attendance-biometric' && (
+            <BiometricAttendanceModule
+              teachers={adminData.teachers}
+              punches={adminData.teacherPunches || []}
+              settings={adminData.biometricSettings}
+              onSavePunches={handleSavePunches}
+              onSaveSettings={handleSaveBiometricSettings}
+              isUrdu={isUrdu}
+            />
+          )}
+
+          {/* ========================================================= */}
+          {/* AUTOMATED PENALTY PAYROLL MODULE */}
+          {/* ========================================================= */}
+          {activeModule === 'payroll' && (
+            <AutomatedPayrollModule
+              teachers={adminData.teachers}
+              punches={adminData.teacherPunches || []}
+              payrolls={adminData.payrollRecords || []}
+              settings={adminData.biometricSettings}
+              onSavePayrolls={handleSavePayrolls}
+              isUrdu={isUrdu}
+            />
+          )}
+
+          {/* ========================================================= */}
+          {/* STUDENT FEE MANAGEMENT MODULE */}
+          {/* ========================================================= */}
+          {activeModule === 'student-fees' && (
+            <StudentFeeModule
+              students={adminData.students}
+              vouchers={adminData.feeVouchers || []}
+              onSaveVouchers={handleSaveVouchers}
+              isUrdu={isUrdu}
+            />
+          )}
+
+          {/* ========================================================= */}
+          {/* DATABASE BACKUP AND RESTORE */}
+          {/* ========================================================= */}
           {activeModule === 'backup' && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900 font-urdu">{isUrdu ? 'ڈیٹا بیس بیک اپ و ری اسٹور' : 'Database Backup & Restore'}</h2>
-                <p className="text-xs text-slate-500 font-urdu">{isUrdu ? 'مکمل ڈیٹا بیس کا فوری سنیپ شاٹ محفوظ کریں یا پرانا بیک اپ بحال کریں' : 'Instant JSON snapshot export, restore, or seed data reset'}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                {/* Export Snapshot */}
-                <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
-                      <Download className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-bold text-slate-900 font-urdu text-base">{isUrdu ? 'بیک اپ ڈاؤن لوڈ کریں' : 'Download Backup JSON'}</h3>
-                    <p className="text-xs text-slate-600 font-urdu leading-relaxed">
-                      {isUrdu ? 'تمام طلبہ، اساتذہ، پیجز اور سیٹنگز کا مکمل اسنیپ شاٹ کمپیوٹر پر محفوظ کریں۔' : 'Download complete database snapshot as a single JSON file.'}
-                    </p>
-                  </div>
-                  <a
-                    href="/api/admin/backup/export"
-                    className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold font-urdu text-center block shadow-sm"
-                  >
-                    {isUrdu ? 'مکمل بیک اپ ڈاؤن لوڈ کریں' : 'Download Backup Snapshot'}
-                  </a>
-                </div>
-
-                {/* Restore Backup */}
-                <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-800 flex items-center justify-center font-bold">
-                      <Upload className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-bold text-slate-900 font-urdu text-base">{isUrdu ? 'بیک اپ بحال کریں' : 'Restore from Backup'}</h3>
-                    <p className="text-xs text-slate-600 font-urdu leading-relaxed">
-                      {isUrdu ? 'کسی بھی سابقہ بیک اپ فائل (JSON) سے ڈیٹا بحال کریں۔' : 'Upload and restore an existing database snapshot.'}
-                    </p>
-                  </div>
-                  <label className="w-full py-2.5 bg-blue-800 hover:bg-blue-900 text-white rounded-xl text-xs font-bold font-urdu text-center block shadow-sm cursor-pointer">
-                    {isUrdu ? 'فائل منتخب کریں' : 'Upload JSON File'}
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = async () => {
-                          try {
-                            const parsed = JSON.parse(reader.result as string);
-                            const res = await restoreDatabaseBackup(parsed);
-                            if (res.success) {
-                              setAdminData(parsed);
-                              showToast(isUrdu ? 'بیک اپ کامیابی سے بحال ہو گیا!' : 'Backup restored successfully!');
-                            }
-                          } catch {
-                            showToast('Invalid backup file format', 'error');
-                          }
-                        };
-                        reader.readAsText(file);
-                      }}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-
-                {/* Reset to Clean Seeds */}
-                <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center font-bold">
-                      <RefreshCw className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-bold text-slate-900 font-urdu text-base">{isUrdu ? 'ابتدائی حالت پر بحال کریں' : 'Reset to Clean Seeds'}</h3>
-                    <p className="text-xs text-slate-600 font-urdu leading-relaxed">
-                      {isUrdu ? 'ڈیٹا بیس کو مدرسے کے بنیادی مصدقہ مواد پر دوبارہ سیٹ کریں۔' : 'Reset all modules to verified default madrasa seed data.'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm(isUrdu ? 'کیا آپ واقعی ڈیٹا بیس کو ابتدائی حالت پر بحال کرنا چاہتے ہیں؟' : 'Reset database to clean default seed data?')) {
-                        const res = await resetDatabaseSeeds();
-                        if (res.success && res.data) {
-                          setAdminData(res.data);
-                          showToast(isUrdu ? 'ڈیٹا بیس ابتدائی حالت پر بحال ہو گیا' : 'Database reset to seeds');
-                        }
-                      }
-                    }}
-                    className="w-full py-2.5 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-bold font-urdu cursor-pointer shadow-sm"
-                  >
-                    {isUrdu ? 'ابتدائی حالت پر ری سیٹ کریں' : 'Reset to Initial Seeds'}
-                  </button>
-                </div>
-
-              </div>
-            </div>
+            <DataProtectionBackup
+              adminData={adminData}
+              onRestoreBackup={handleRestoreBackupFull}
+              isUrdu={isUrdu}
+            />
           )}
 
           {/* ========================================================= */}
@@ -3304,6 +3454,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentLang, onD
         </main>
 
       </div>
+
+      {/* Enterprise Bulk Importer & Biometric Cards Modals */}
+      <BulkImporterModal
+        type={bulkImporterType}
+        isOpen={isBulkImporterOpen}
+        onClose={() => setIsBulkImporterOpen(false)}
+        onImportSuccess={(imported) => {
+          if (bulkImporterType === 'teacher') {
+            const updated = [...(imported as Teacher[]), ...adminData.teachers];
+            handleSaveModule('teachers', updated);
+            showToast(isUrdu ? `${imported.length} اساتذہ کرام ریکارڈز شامل ہو گئے۔` : `Imported ${imported.length} teacher profiles`);
+            setBiometricCardsType('teacher');
+            setIsBiometricCardsOpen(true);
+          } else {
+            const updated = [...(imported as Student[]), ...adminData.students];
+            handleSaveModule('students', updated);
+            showToast(isUrdu ? `${imported.length} طلبہ کرام ریکارڈز شامل ہو گئے۔` : `Imported ${imported.length} student profiles`);
+            setBiometricCardsType('student');
+            setIsBiometricCardsOpen(true);
+          }
+        }}
+        isUrdu={isUrdu}
+      />
+
+      <BiometricCardsModal
+        type={biometricCardsType}
+        items={biometricCardsType === 'teacher' ? adminData.teachers : adminData.students}
+        isOpen={isBiometricCardsOpen}
+        onClose={() => setIsBiometricCardsOpen(false)}
+        isUrdu={isUrdu}
+      />
 
     </div>
   );

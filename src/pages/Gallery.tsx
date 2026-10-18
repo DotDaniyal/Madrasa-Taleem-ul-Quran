@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Language, GalleryItem } from '../types';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { BookOpen, Award, Building, Sparkles, GraduationCap, Library, X, Calendar, Search } from 'lucide-react';
 
 interface GalleryProps {

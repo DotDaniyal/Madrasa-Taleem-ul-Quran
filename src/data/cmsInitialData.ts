@@ -58,18 +58,8 @@ export interface AnimationSettings {
   enableCounters: boolean;
 }
 
-export interface Student {
-  id: string;
-  name: string;
-  fatherName: string;
-  guardianPhone: string;
-  programId: string;
-  enrollmentDate: string;
-  status: 'active' | 'graduated' | 'leave' | 'archived';
-  academicNotes: string;
-  age: string;
-  address: string;
-}
+import { Student } from '../types';
+export type { Student };
 
 export interface Competition {
   id: string;
